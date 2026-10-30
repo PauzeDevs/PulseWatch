@@ -36,6 +36,18 @@ test("resolves public A records and rejects private addresses", async () => {
       json: async () => ({ Status: 0, Answer: [{ type: 1, data: "127.0.0.1" }] })
     });
     await assert.rejects(probe.resolvePublicDomain("internal.example"), /private or reserved/);
+
+    globalThis.fetch = async () => ({
+      ok: true,
+      json: async () => ({ Status: 0, Answer: [{ type: 1, data: "192.88.99.10" }] })
+    });
+    await assert.rejects(probe.resolvePublicDomain("reserved.example"), /private or reserved/);
+
+    globalThis.fetch = async () => ({
+      ok: true,
+      json: async () => ({ Status: 0, Answer: [{ type: 28, data: "2001:db8::1" }] })
+    });
+    await assert.rejects(probe.resolvePublicDomain("docs.example"), /private or reserved/);
   } finally {
     globalThis.fetch = originalFetch;
   }
