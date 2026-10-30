@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: pulsewatch-monitor
@@ -40,3 +42,11 @@ jobs:
           git add data/status.json data/history.json
           git commit -m "(monitor): record website check results"
           git push
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload updated site and monitoring data
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Deploy updated dashboard data
+        uses: actions/deploy-pages@v4
