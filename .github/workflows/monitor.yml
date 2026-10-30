@@ -1,6 +1,12 @@
 name: PulseWatch Monitor
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "monitors.json"
+      - "scripts/**"
+      - ".github/workflows/monitor.yml"
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
