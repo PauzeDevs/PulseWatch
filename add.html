@@ -20,6 +20,9 @@
     button{border:0;border-radius:12px;padding:13px 18px;background:linear-gradient(110deg,var(--blue),var(--pink));color:white;font:inherit;font-weight:750;cursor:pointer;margin-top:20px}button:hover{filter:brightness(1.08);transform:translateY(-1px)}
     .fine{font-size:.76rem;color:var(--muted);margin-top:14px}.footer{border-top:1px solid rgba(252,255,255,.12);padding:22px 0 35px;color:var(--muted);font-size:.82rem}
     @media(max-width:600px){main{padding:48px 0}.panel{padding:19px}.top{gap:12px}}
+    .form-status{display:block;margin-top:14px;padding:12px 14px;border:1px solid rgba(252,255,255,.18);border-radius:12px;background:rgba(5,147,198,.12);color:var(--muted);font-size:.84rem}.form-status.error{border-color:rgba(216,57,149,.5);background:rgba(216,57,149,.12);color:#ffd9ec}.form-status.success{border-color:rgba(5,147,198,.5);color:#dff8ff}.form-status[hidden]{display:none}
+    .reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1);will-change:transform,opacity}.reveal.is-visible{opacity:1;transform:translate3d(0,0,0);will-change:auto}
+    @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;will-change:auto}}
   </style>
 </head>
 <body>
@@ -37,27 +40,48 @@
         <label for="reason">Why should we monitor it? <span class="hint">(optional)</span></label>
         <textarea id="reason" name="reason" maxlength="500" placeholder="Tell us briefly why this website would be useful to track."></textarea>
         <p class="notice">Requests are reviewed by the PulseWatch maintainers before monitoring begins. Do not submit private dashboards, internal network addresses, login-only pages, or URLs containing passwords, API keys, or other secrets.</p>
-        <button type="submit">Continue to GitHub request</button>
+        <button type="submit" id="submit-request">Verify domain & continue</button>
+        <output class="form-status" id="validation-status" role="status" aria-live="polite" hidden></output>
         <p class="fine">GitHub account sign-in may be required to submit the request. Submitting a request does not guarantee acceptance.</p>
       </form>
     </main>
     <footer class="footer">© 2026 PauzeX Developments · PulseWatch</footer>
   </div>
+  <script src="assets/site-probe.js"></script>
+  <script src="assets/scroll-reveal.js"></script>
   <script>
-    document.getElementById("request-form").addEventListener("submit", event => {
+    const requestForm = document.getElementById("request-form");
+    const validationStatus = document.getElementById("validation-status");
+    const submitButton = document.getElementById("submit-request");
+    function showValidation(message, type) {
+      validationStatus.textContent = message;
+      validationStatus.className = "form-status " + type;
+      validationStatus.hidden = false;
+    }
+    requestForm.addEventListener("submit", async event => {
       event.preventDefault();
       const name = document.getElementById("site-name").value.trim();
       const rawUrl = document.getElementById("site-url").value.trim();
       const reason = document.getElementById("reason").value.trim();
-      let parsed;
-      try { parsed = new URL(rawUrl); } catch { alert("Enter a valid website URL."); return; }
-      if (!["http:","https:"].includes(parsed.protocol) || parsed.username || parsed.password || !parsed.hostname.includes(".")) {
-        alert("Use a public HTTP or HTTPS website URL without embedded credentials."); return;
+      if (!name) return;
+      submitButton.disabled = true;
+      submitButton.textContent = "Checking HTTPS and DNS…";
+      showValidation("Checking for a public DNS record and a working HTTPS connection. This can take a few seconds.", "info");
+      try {
+        const checked = await window.PulseWatchProbe.validateAndProbe(rawUrl);
+        if (checked.result.kind === "unreachable") {
+          throw new Error("The domain has DNS records, but its HTTPS endpoint could not be reached. Fix the certificate or server before submitting it.");
+        }
+        showValidation("Verified: public DNS exists and the HTTPS endpoint responded. Opening the GitHub review request…", "success");
+        const title = "[Monitor request] " + name;
+        const body = "### Website name\n" + name + "\n\n### Website URL\n" + checked.url.href + "\n\n### Domain validation\nPublic DNS resolved; HTTPS endpoint responded (check type: " + checked.result.kind + ").\n\n### Why should this website be monitored?\n" + (reason || "Not provided") + "\n";
+        const target = "https://github.com/PauzeDevs/PulseWatch/issues/new?template=monitor-request.md&title=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
+        window.location.href = target;
+      } catch (error) {
+        showValidation(error.message || "Domain validation failed. Please check the URL and try again.", "error");
+        submitButton.disabled = false;
+        submitButton.textContent = "Verify domain & continue";
       }
-      const title = "[Monitor request] " + name;
-      const body = "### Website name\n" + name + "\n\n### Website URL\n" + parsed.href + "\n\n### Why should this website be monitored?\n" + (reason || "Not provided") + "\n";
-      const target = "https://github.com/PauzeDevs/PulseWatch/issues/new?template=monitor-request.md&title=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
-      window.location.href = target;
     });
   </script>
 </body>
