@@ -104,7 +104,7 @@
   <div class="wrap">
     <header class="top">
       <a class="brand" href="./" aria-label="PulseWatch home">pulse<span>watch</span></a>
-      <nav aria-label="Main navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
+      <nav aria-label="Main navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="add.html">Add a website</a><a href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
     </header>
     <main>
       <section class="hero">
@@ -158,8 +158,8 @@
       </section>
       <section class="section" id="how-it-works">
         <h2>Built for a lightweight workflow</h2>
-        <p class="lead">PulseWatch is being developed by PauzeX Developments with a static web interface and GitHub-based project infrastructure. Monitoring functionality and public reporting will be introduced as the project develops.</p>
-        <p class="note">PulseWatch is currently a project landing page. It does not yet provide live monitoring, uptime guarantees, or active incident alerts.</p>
+        <p class="lead">PulseWatch checks a curated list of public websites on a five-minute schedule using GitHub Actions. Community members can request additional sites for review through the Add a website page.</p>
+        <p class="note">Monitoring is best-effort and is not an uptime SLA. Community-submitted websites are reviewed before they are added. Check history begins when monitoring starts; past uptime is not inferred.</p>
       </section>
     </main>
     <footer class="footer"><span>© <span id="year">2026</span> PauzeX Developments · PulseWatch</span><a href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></footer>
@@ -235,7 +235,7 @@
       if(!monitors.length) {
         const empty=document.createElement("div");empty.className="empty-state";
         const strong=document.createElement("strong");strong.textContent="No monitors configured";
-        empty.append(strong,document.createTextNode("Add website entries to monitors.json in the GitHub repository. The checker runs every five minutes after targets are added."));
+        empty.append(strong,document.createTextNode("No monitor results have been published yet. The first scheduled check will populate this dashboard."));
         list.append(empty);
       } else monitors.forEach(monitor=>{
         const row=document.createElement("div");row.className="site-row";
