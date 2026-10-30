@@ -11,6 +11,7 @@
     if (a === 169 && b === 254) return false;
     if (a === 172 && b >= 16 && b <= 31) return false;
     if (a === 192 && (b === 0 || b === 168)) return false;
+    if (a === 192 && b === 88 && c === 99) return false;
     if (a === 100 && b >= 64 && b <= 127) return false;
     if (a === 198 && (b === 18 || b === 19 || (b === 51 && c === 100))) return false;
     if (a === 203 && b === 0 && c === 113) return false;
@@ -23,7 +24,10 @@
     if (ip.startsWith("::ffff:") || ip === "::" || ip === "::1") return false;
     if (ip.startsWith("fc") || ip.startsWith("fd") || ip.startsWith("fe8") ||
         ip.startsWith("fe9") || ip.startsWith("fea") || ip.startsWith("feb") ||
-        ip.startsWith("ff") || ip.startsWith("2001:db8")) return false;
+        ip.startsWith("ff") || ip.startsWith("2001:db8") ||
+        ip.startsWith("2001:0000") || ip.startsWith("2001:0010") ||
+        ip.startsWith("2001:0020") || ip.startsWith("2002:") ||
+        ip.startsWith("3fff:")) return false;
     return /^[23]/.test(ip);
   }
 
@@ -56,7 +60,12 @@
       if (!response.ok) throw new Error("The public DNS resolver could not validate this domain.");
       return response.json();
     }));
-    const answers = replies.flatMap(reply => reply.Status === 0 ? (reply.Answer || []) : []);
+    const answers = replies.flatMap(reply => {
+      if (!reply || typeof reply.Status !== "number") {
+        throw new Error("The public DNS resolver returned an invalid response.");
+      }
+      return reply.Status === 0 && Array.isArray(reply.Answer) ? reply.Answer : [];
+    });
     const addresses = [...new Set(answers.filter(answer => answer.type === 1 || answer.type === 28).map(answer => answer.data))];
     if (!addresses.length) throw new Error("This domain has no public A or AAAA DNS record. Check the spelling or DNS settings.");
     const safe = addresses.every(address => address.includes(":") ? isPublicIPv6(address) : isPublicIPv4(address));
