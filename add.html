@@ -66,17 +66,19 @@
       if (!name) return;
       submitButton.disabled = true;
       submitButton.textContent = "Checking HTTPS and DNS…";
+      const requestStartedAt = Date.now();
       showValidation("Checking for a public DNS record and a working HTTPS connection. This can take a few seconds.", "info");
       try {
         const checked = await window.PulseWatchProbe.validateAndProbe(rawUrl);
+        if (Date.now() - requestStartedAt > 20000) throw new Error("Validation took too long. Please try again.");
         if (checked.result.kind === "unreachable") {
           throw new Error("The domain has DNS records, but its HTTPS endpoint could not be reached. Fix the certificate or server before submitting it.");
         }
         showValidation("Verified: public DNS exists and the HTTPS endpoint responded. Opening the GitHub review request…", "success");
         const title = "[Monitor request] " + name;
         const body = "### Website name\n" + name + "\n\n### Website URL\n" + checked.url.href + "\n\n### Domain validation\nPublic DNS resolved; HTTPS endpoint responded (check type: " + checked.result.kind + ").\n\n### Why should this website be monitored?\n" + (reason || "Not provided") + "\n";
-        const target = "https://github.com/PauzeDevs/PulseWatch/issues/new?template=monitor-request.md&title=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
-        window.location.href = target;
+        const target = "https://github.com/PauzeDevs/PulseWatch/issues/new?title=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
+        window.location.assign(target);
       } catch (error) {
         showValidation(error.message || "Domain validation failed. Please check the URL and try again.", "error");
         submitButton.disabled = false;
