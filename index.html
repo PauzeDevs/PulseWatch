@@ -72,6 +72,22 @@
     @media(max-width:700px){.dash-content{grid-template-columns:1fr}.dashboard-top{align-items:flex-start}.site-row{align-items:flex-start}.preview{padding:16px}}
     @media(prefers-reduced-motion:reduce){.pulse-dot,.chart-line{animation:none!important}.chart-line{stroke-dashoffset:0}}
 
+
+    .monitor-state{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid rgba(252,255,255,.18);border-radius:99px;font-size:.72rem;white-space:nowrap}
+    .monitor-state:before{content:"";width:7px;height:7px;border-radius:50%;background:#aeb9c7}
+    .monitor-state.operational:before{background:#79e4d0;box-shadow:0 0 10px rgba(121,228,208,.7)}
+    .monitor-state.degraded:before{background:#f3c66b;box-shadow:0 0 10px rgba(243,198,107,.55)}
+    .monitor-state.down:before{background:#ff79a9;box-shadow:0 0 10px rgba(255,121,169,.55)}
+    .monitor-state.unknown:before{background:#aeb9c7}
+    .empty-state{padding:22px;border:1px dashed rgba(252,255,255,.22);border-radius:13px;color:var(--muted);font-size:.86rem;text-align:center}
+    .empty-state strong{display:block;color:var(--text);margin-bottom:5px}
+    .metric-value{font-size:1.35rem;font-weight:750;letter-spacing:-.04em}
+    .chart-empty{height:92px;display:grid;place-items:center;color:var(--muted);font-size:.78rem;text-align:center}
+    .refresh-note{font-size:.7rem;color:var(--muted)}
+    .activity-item .activity-icon.operational{background:rgba(5,147,198,.18);color:#c7f8f2}
+    .activity-item .activity-icon.degraded{background:rgba(243,198,107,.15);color:#f3c66b}
+    .activity-item .activity-icon.down{background:rgba(216,57,149,.18);color:#ffc3e4}
+
   </style>
   <script type="application/ld+json">
   {
@@ -97,51 +113,38 @@
         <p>PulseWatch is a lightweight website monitoring project focused on availability checks, response-time visibility, and a readable history of service incidents.</p>
         <div class="actions"><a class="btn primary" href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">Explore the project</a><a class="btn secondary" href="#features">Explore features</a></div>
       </section>
-      <section class="preview" aria-label="PulseWatch dashboard preview">
+      <section class="preview" aria-label="PulseWatch live monitoring dashboard">
         <div class="dashboard">
           <div class="dashboard-top">
             <div class="dash-brand"><span class="dash-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 13h4l3-8 4 14 3-8h4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>PulseWatch <span class="dash-muted">/ Overview</span></span></div>
-            <span class="demo-tag">Interface preview</span>
+            <span class="monitor-state unknown" id="overall-state" aria-live="polite">Checking status</span>
           </div>
           <div class="dash-content">
             <div class="dash-main">
               <div class="dash-panel">
-                <div class="dash-panel-head"><strong>Monitored websites</strong><span class="health-pill"><i class="pulse-dot"></i> Demo status</span></div>
-                <div class="site-list">
-                  <div class="site-row"><div class="site-info"><span class="site-icon">PW</span><div><div class="site-name">example.com</div><div class="site-url">https://example.com</div></div></div><span class="site-state">Operational</span></div>
-                  <div class="site-row"><div class="site-info"><span class="site-icon">AP</span><div><div class="site-name">api.example.com</div><div class="site-url">https://api.example.com</div></div></div><span class="site-state">Operational</span></div>
-                  <div class="site-row"><div class="site-info"><span class="site-icon">ST</span><div><div class="site-name">status.example.com</div><div class="site-url">https://status.example.com</div></div></div><span class="site-state">Operational</span></div>
-                </div>
+                <div class="dash-panel-head"><strong>Monitored websites</strong><span class="refresh-note" id="last-checked">Waiting for first check</span></div>
+                <div class="site-list" id="monitor-list" aria-live="polite"><div class="empty-state"><strong>No monitoring data yet</strong>PulseWatch will list configured websites here after its first scheduled check.</div></div>
               </div>
               <div class="dash-panel">
-                <div class="dash-panel-head"><strong>Response time</strong><span class="dash-muted">Illustrative · 24 hours</span></div>
-                <div class="chart-wrap"><svg viewBox="0 0 520 100" role="img" aria-label="Decorative response time line chart">
-                  <defs><linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0593C6" stop-opacity=".55"/><stop offset="1" stop-color="#0593C6" stop-opacity="0"/></linearGradient></defs>
-                  <path class="chart-grid" d="M0 15H520M0 48H520M0 81H520"/><path class="chart-fill" d="M0 67 L38 61 L76 65 L114 43 L152 50 L190 32 L228 41 L266 24 L304 39 L342 30 L380 47 L418 27 L456 34 L494 17 L520 22 L520 100 L0 100Z"/>
-                  <path class="chart-line" d="M0 67 L38 61 L76 65 L114 43 L152 50 L190 32 L228 41 L266 24 L304 39 L342 30 L380 47 L418 27 L456 34 L494 17 L520 22"/>
-                </svg></div>
-                <div class="dash-muted">A sample visualization — no live measurements are connected.</div>
+                <div class="dash-panel-head"><strong>Response time</strong><span class="dash-muted">Recent checks</span></div>
+                <div class="chart-wrap" id="response-chart"><div class="chart-empty">Waiting for response-time samples</div></div>
               </div>
             </div>
             <aside class="dash-side">
-              <div class="dash-panel"><div class="dash-panel-head"><strong>Health snapshot</strong><span class="dash-muted">Demo data</span></div>
+              <div class="dash-panel"><div class="dash-panel-head"><strong>Health snapshot</strong><span class="dash-muted">Live data</span></div>
                 <div class="dash-stats">
-                  <div class="dash-stat"><span>Uptime</span><b>99.98%</b><small class="trend">Sample metric</small></div>
-                  <div class="dash-stat"><span>Avg. response</span><b>184 ms</b><small class="trend">Sample metric</small></div>
-                  <div class="dash-stat"><span>Websites</span><b>03</b><small class="dash-muted">Illustrative</small></div>
-                  <div class="dash-stat"><span>Incidents</span><b>00</b><small class="dash-muted">Illustrative</small></div>
+                  <div class="dash-stat"><span>Avg. uptime</span><b class="metric-value" id="metric-uptime">—</b><small class="dash-muted">From recorded checks</small></div>
+                  <div class="dash-stat"><span>Avg. response</span><b class="metric-value" id="metric-latency">—</b><small class="dash-muted">Latest check results</small></div>
+                  <div class="dash-stat"><span>Websites</span><b class="metric-value" id="metric-sites">0</b><small class="dash-muted">Configured monitors</small></div>
+                  <div class="dash-stat"><span>Down</span><b class="metric-value" id="metric-down">0</b><small class="dash-muted">Current failures</small></div>
                 </div>
               </div>
-              <div class="dash-panel"><div class="dash-panel-head"><strong>Recent activity</strong><span class="dash-muted">Preview</span></div>
-                <div class="activity">
-                  <div class="activity-item"><span class="activity-icon">✓</span><div><p>Example endpoint check passed</p><small>Illustrative event</small></div></div>
-                  <div class="activity-item"><span class="activity-icon">↗</span><div><p>Response time recorded</p><small>Illustrative event</small></div></div>
-                  <div class="activity-item"><span class="activity-icon">＋</span><div><p>Monitor configuration ready</p><small>Illustrative event</small></div></div>
-                </div>
+              <div class="dash-panel"><div class="dash-panel-head"><strong>Recent activity</strong><span class="dash-muted">Latest checks</span></div>
+                <div class="activity" id="activity-list"><div class="empty-state">No check events recorded yet.</div></div>
               </div>
             </aside>
           </div>
-          <div class="preview-foot">All names, statuses and metrics shown here are sample UI data, not live monitoring results.</div>
+          <div class="preview-foot" id="data-source-note">Dashboard values appear here after monitors are configured and the first check completes.</div>
         </div>
       </section>
       <section class="section" id="features">
@@ -161,6 +164,118 @@
     </main>
     <footer class="footer"><span>© <span id="year">2026</span> PauzeX Developments · PulseWatch</span><a href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">Source code on GitHub</a></footer>
   </div>
-  <script>document.getElementById("year").textContent=new Date().getFullYear();</script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    const statusUrl = new URL("data/status.json", document.baseURI);
+    const historyUrl = new URL("data/history.json", document.baseURI);
+    const byId = id => document.getElementById(id);
+    const setText = (id, value) => { byId(id).textContent = value; };
+    const labelStatus = status => ({ operational: "Operational", degraded: "Degraded", down: "Down", unknown: "Unknown" }[status] || "Unknown");
+    const formatTime = value => {
+      if (!value) return "Not checked yet";
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? "Not checked yet" : date.toLocaleString();
+    };
+    function statusBadge(status) {
+      const badge = document.createElement("span");
+      badge.className = "monitor-state " + (["operational","degraded","down"].includes(status) ? status : "unknown");
+      badge.textContent = labelStatus(status);
+      return badge;
+    }
+    function drawResponseChart(history, monitors) {
+      const host = byId("response-chart");
+      host.replaceChildren();
+      const series = monitors.length ? (history.monitors?.[monitors[0].id] || []).slice(-24) : [];
+      const points = series.filter(item => Number.isFinite(item.responseTimeMs));
+      if (points.length < 2) {
+        const empty = document.createElement("div");
+        empty.className = "chart-empty";
+        empty.textContent = "At least two real response-time samples are needed to draw this chart.";
+        host.append(empty);
+        return;
+      }
+      const width = 520, height = 100, pad = 8;
+      const max = Math.max(100, ...points.map(point => point.responseTimeMs)) * 1.12;
+      const coords = points.map((point,index) => {
+        const x = pad + index * (width - pad * 2) / (points.length - 1);
+        const y = height - pad - (point.responseTimeMs / max) * (height - pad * 2);
+        return [x,y];
+      });
+      const pathData = coords.map((point,index) => (index ? "L" : "M") + point[0].toFixed(1) + " " + point[1].toFixed(1)).join(" ");
+      const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 520 100");
+      svg.setAttribute("role","img");
+      svg.setAttribute("aria-label","Response time history for " + monitors[0].name);
+      const defs = document.createElementNS(svg.namespaceURI,"defs");
+      const gradient = document.createElementNS(svg.namespaceURI,"linearGradient");
+      gradient.setAttribute("id","liveChartGradient"); gradient.setAttribute("x1","0"); gradient.setAttribute("x2","0"); gradient.setAttribute("y1","0"); gradient.setAttribute("y2","1");
+      const stop1=document.createElementNS(svg.namespaceURI,"stop"); stop1.setAttribute("offset","0"); stop1.setAttribute("stop-color","#0593C6"); stop1.setAttribute("stop-opacity",".5");
+      const stop2=document.createElementNS(svg.namespaceURI,"stop"); stop2.setAttribute("offset","1"); stop2.setAttribute("stop-color","#0593C6"); stop2.setAttribute("stop-opacity","0");
+      gradient.append(stop1,stop2); defs.append(gradient); svg.append(defs);
+      [20,50,80].forEach(y=>{const line=document.createElementNS(svg.namespaceURI,"path");line.setAttribute("d","M0 "+y+"H520");line.setAttribute("class","chart-grid");svg.append(line);});
+      const area=document.createElementNS(svg.namespaceURI,"path");area.setAttribute("d",pathData+" L"+coords[coords.length-1][0]+" 100 L"+coords[0][0]+" 100 Z");area.setAttribute("fill","url(#liveChartGradient)");svg.append(area);
+      const line=document.createElementNS(svg.namespaceURI,"path");line.setAttribute("d",pathData);line.setAttribute("class","chart-line");svg.append(line);
+      host.append(svg);
+      const caption=document.createElement("div");caption.className="dash-muted";caption.textContent="Showing "+points.length+" recorded samples for "+monitors[0].name+".";host.append(caption);
+    }
+    function renderDashboard(statusData, historyData) {
+      const monitors = Array.isArray(statusData.monitors) ? statusData.monitors : [];
+      const overall = monitors.length === 0 ? "unknown" : monitors.some(m=>m.status==="down") ? "down" : monitors.some(m=>m.status==="degraded") ? "degraded" : monitors.every(m=>m.status==="operational") ? "operational" : "unknown";
+      const overallNode=byId("overall-state"); overallNode.className="monitor-state "+overall; overallNode.textContent=monitors.length ? labelStatus(overall) : "Awaiting monitors";
+      setText("last-checked", statusData.checkedAt ? "Last check · "+formatTime(statusData.checkedAt) : "Waiting for first check");
+      setText("metric-sites",String(monitors.length));
+      setText("metric-down",String(monitors.filter(m=>m.status==="down").length));
+      if(monitors.length) {
+        const uptime=monitors.reduce((sum,m)=>sum+(Number(m.uptimePercent)||0),0)/monitors.length;
+        setText("metric-uptime",uptime.toFixed(2)+"%");
+        const validLatency=monitors.filter(m=>Number.isFinite(m.responseTimeMs));
+        setText("metric-latency",validLatency.length ? Math.round(validLatency.reduce((sum,m)=>sum+m.responseTimeMs,0)/validLatency.length)+" ms" : "—");
+      } else { setText("metric-uptime","—"); setText("metric-latency","—"); }
+      const list=byId("monitor-list"); list.replaceChildren();
+      if(!monitors.length) {
+        const empty=document.createElement("div");empty.className="empty-state";
+        const strong=document.createElement("strong");strong.textContent="No monitors configured";
+        empty.append(strong,document.createTextNode("Add website entries to monitors.json in the GitHub repository. The checker runs every five minutes after targets are added."));
+        list.append(empty);
+      } else monitors.forEach(monitor=>{
+        const row=document.createElement("div");row.className="site-row";
+        const info=document.createElement("div");info.className="site-info";
+        const icon=document.createElement("span");icon.className="site-icon";icon.textContent=(monitor.name||"PW").slice(0,2).toUpperCase();
+        const details=document.createElement("div");
+        const name=document.createElement("div");name.className="site-name";name.textContent=monitor.name;
+        const url=document.createElement("div");url.className="site-url";url.textContent=monitor.url;
+        details.append(name,url);info.append(icon,details);
+        const state=statusBadge(monitor.status);row.append(info,state);
+        const meta=document.createElement("div");meta.className="site-url";meta.textContent=(monitor.statusCode ? "HTTP "+monitor.statusCode+" · " : "")+(Number.isFinite(monitor.responseTimeMs)?monitor.responseTimeMs+" ms":"No response")+(monitor.error?" · "+monitor.error:"");
+        const wrapper=document.createElement("div");wrapper.append(row,meta);list.append(wrapper);
+      });
+      const activity=byId("activity-list");activity.replaceChildren();
+      const recent=[...monitors].sort((a,b)=>new Date(b.checkedAt)-new Date(a.checkedAt)).slice(0,5);
+      if(!recent.length){const empty=document.createElement("div");empty.className="empty-state";empty.textContent="No check events recorded yet.";activity.append(empty);}
+      recent.forEach(m=>{
+        const item=document.createElement("div");item.className="activity-item";
+        const icon=document.createElement("span");icon.className="activity-icon "+m.status;icon.textContent=m.status==="operational"?"✓":m.status==="degraded"?"!":"×";
+        const body=document.createElement("div");const p=document.createElement("p");p.textContent=m.name+" · "+labelStatus(m.status);
+        const small=document.createElement("small");small.textContent=formatTime(m.checkedAt)+(m.statusCode?" · HTTP "+m.statusCode:"");
+        body.append(p,small);item.append(icon,body);activity.append(item);
+      });
+      drawResponseChart(historyData,monitors);
+      setText("data-source-note",monitors.length ? "Live check results from PulseWatch GitHub Actions · Updated "+formatTime(statusData.checkedAt) : "No live metrics are being reported until at least one target is added to monitors.json.");
+    }
+    async function loadDashboard() {
+      try {
+        const [statusResponse,historyResponse]=await Promise.all([fetch(statusUrl,{cache:"no-store"}),fetch(historyUrl,{cache:"no-store"})]);
+        if(!statusResponse.ok||!historyResponse.ok) throw new Error("Monitoring data is not available yet.");
+        const [statusData,historyData]=await Promise.all([statusResponse.json(),historyResponse.json()]);
+        renderDashboard(statusData,historyData);
+      } catch(error) {
+        byId("overall-state").textContent="Data unavailable";
+        byId("overall-state").className="monitor-state unknown";
+        setText("data-source-note","Could not load monitoring data. It will retry automatically.");
+      }
+    }
+    loadDashboard();
+    window.setInterval(loadDashboard,60000);
+  </script>
 </body>
 </html>
