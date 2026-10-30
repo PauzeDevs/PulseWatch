@@ -5,6 +5,10 @@ A lightweight website monitoring project by **PauzeX Developments**, focused on 
 ## Website
 https://pauzedevs.github.io/PulseWatch/
 
+## Community monitor requests
+
+Visitors can suggest a public website at [Add a website](https://pauzedevs.github.io/PulseWatch/add.html). The form opens a pre-filled GitHub issue. Requests are reviewed by maintainers before being added to `monitors.json`; submissions do not automatically trigger network checks. This review step prevents arbitrary public input from being executed directly by the monitoring runner.
+
 ## Monitoring engine
 
 PulseWatch uses GitHub Actions as a scheduled worker and JSON files as its storage layer. No external database or paid monitoring service is required.
@@ -68,4 +72,4 @@ For Google Search Console, add and verify `https://pauzedevs.github.io/PulseWatc
 
 ## Project status
 
-The automated checker and live JSON dashboard are implemented. Add your target websites to `monitors.json` to begin collecting real results.
+The automated checker and live JSON dashboard are implemented. The initial monitor list includes Apple, Microsoft, Google, GitHub, Cloudflare, Amazon, Wikipedia, and YouTube. Community requests are reviewed before acceptance.
