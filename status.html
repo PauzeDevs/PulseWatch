@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07131d">
+<title>Monitored websites — PulseWatch</title>
+<meta name="description" content="Live status, uptime estimates, response times and check history for websites monitored by PulseWatch.">
+<link rel="canonical" href="https://pauzedevs.github.io/PulseWatch/status.html">
+<style>
+:root{color-scheme:dark;--bg:#07131d;--text:#fcffff;--muted:rgba(252,255,255,.7);--blue:#0593c6;--pink:#d83995;--line:rgba(252,255,255,.16)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 10% 10%,rgba(5,147,198,.35),transparent 38%),radial-gradient(ellipse at 90% 30%,rgba(216,57,149,.25),transparent 42%),linear-gradient(145deg,#06121c,#0b1b2b 52%,#171326);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{width:min(1080px,calc(100% - 32px));margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:22px 0;border-bottom:1px solid var(--line)}a{color:inherit}.brand{font-weight:850;letter-spacing:-.05em;font-size:1.3rem;text-decoration:none}.brand span{color:var(--blue)}nav{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}nav a{text-decoration:none}.hero{padding:54px 0 25px}.eyebrow{color:#dff8ff;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}.hero h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.05;letter-spacing:-.06em;margin:12px 0}.hero p{color:var(--muted);max-width:700px;margin:0}.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:22px 0}.search{flex:1;min-width:200px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:rgba(4,14,24,.65);color:var(--text);font:inherit}.refresh{padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(252,255,255,.08);color:var(--text);font:inherit;font-weight:700;cursor:pointer}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 25px}.stat,.panel,.site{border:1px solid var(--line);border-radius:17px;background:linear-gradient(140deg,rgba(5,147,198,.15),rgba(252,255,255,.045) 60%,rgba(216,57,149,.1));backdrop-filter:blur(14px)}.stat{padding:17px}.stat span{display:block;color:var(--muted);font-size:.8rem}.stat b{font-size:1.7rem;letter-spacing:-.04em}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:28px 0 12px}.section-title h2{font-size:1.3rem;margin:0}.site-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.site{display:block;padding:17px;text-decoration:none;transition:transform .18s,border-color .18s}.site:hover{transform:translateY(-2px);border-color:rgba(5,147,198,.65)}.site-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.site-name{font-weight:750;overflow-wrap:anywhere}.site-url{color:var(--muted);font-size:.78rem;overflow-wrap:anywhere;margin-top:3px}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:99px;padding:4px 9px;font-size:.72rem;white-space:nowrap}.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:#aeb9c7}.pill.operational:before{background:#79e4d0}.pill.degraded:before{background:#f3c66b}.pill.down:before{background:#ff79a9}.site-meta{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.78rem;margin-top:13px}.panel{padding:22px;margin:26px 0 60px}.back{display:inline-block;color:#dff8ff;text-decoration:none;margin-bottom:10px}.detail-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.detail-head h2{margin:0;font-size:clamp(1.5rem,4vw,2.2rem);letter-spacing:-.04em}.detail-url{color:var(--muted);overflow-wrap:anywhere;margin:5px 0 18px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(4,14,24,.35)}.metric span{display:block;color:var(--muted);font-size:.75rem}.metric b{display:block;font-size:1.35rem;margin-top:4px;overflow-wrap:anywhere}.chart{display:flex;align-items:end;gap:4px;height:110px;padding:12px 0 0;border-bottom:1px solid var(--line)}.bar{flex:1;min-width:3px;border-radius:4px 4px 0 0;background:#79e4d0;opacity:.85}.bar.bad{background:#ff79a9}.bar.degraded{background:#f3c66b}.history-list{display:grid;gap:8px;margin-top:14px}.history-row{display:flex;justify-content:space-between;gap:10px;border-top:1px solid rgba(252,255,255,.1);padding:9px 0;font-size:.82rem}.muted{color:var(--muted)}.empty{padding:24px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--muted);grid-column:1/-1}.hidden{display:none!important}.footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:.85rem}
+@media(max-width:700px){.site-list{grid-template-columns:1fr}.summary{grid-template-columns:repeat(3,1fr)}.metrics{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start;flex-direction:column}.stat{padding:12px}.stat b{font-size:1.35rem}}@media(max-width:380px){.summary{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><a class="brand" href="./">pulse<span>watch</span></a><nav aria-label="Main navigation"><a href="./">Quick check</a><a href="add.html">Add a website</a><a href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">GitHub</a></nav></header>
+<main>
+<section class="hero"><span class="eyebrow">Public monitoring directory</span><h1>Website status, <span style="background:linear-gradient(100deg,#0593c6,#fcffff,#d83995);background-clip:text;color:transparent">at a glance.</span></h1><p>Browse websites accepted into PulseWatch monitoring. Open any website to see its latest status, recorded uptime estimate, response time and recent check history.</p></section>
+<div class="summary" aria-live="polite"><div class="stat"><span>Monitored websites</span><b id="total-count">—</b></div><div class="stat"><span>Operational</span><b id="up-count">—</b></div><div class="stat"><span>Needs attention</span><b id="attention-count">—</b></div></div>
+<div class="toolbar"><input class="search" id="search" type="search" placeholder="Search websites…" aria-label="Search monitored websites"><button class="refresh" id="refresh" type="button">Refresh status</button></div>
+<div class="section-title"><h2>Monitored websites</h2><span class="muted" id="updated-at">Loading status data…</span></div>
+<div class="site-list" id="site-list" aria-live="polite"><div class="empty">Loading monitored websites…</div></div>
+<section class="panel hidden" id="detail" aria-live="polite">
+<a class="back" href="status.html">← All monitored websites</a>
+<div class="detail-head"><div><h2 id="detail-name">Website</h2><div class="detail-url" id="detail-url"></div></div><span class="pill unknown" id="detail-state">Waiting for first check</span></div>
+<div class="metrics" id="detail-metrics"></div>
+<div class="section-title"><h2>Recent check history</h2><span class="muted" id="sample-count"></span></div>
+<div class="chart" id="history-chart" aria-label="Recent uptime checks"></div>
+<div class="history-list" id="history-list"></div>
+<p class="muted" id="detail-note" style="font-size:.8rem;margin-top:18px"></p>
+</section>
+</main>
+<footer class="footer">© 2026 PauzeX Developments · PulseWatch · Monitoring is best-effort and not an uptime SLA.</footer>
+</div>
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const list = $("site-list");
+let monitors = [], statusData = {}, historyData = {};
+const escDate = value => value ? new Date(value).toLocaleString() : "Not checked yet";
+const stateLabel = value => ({operational:"Operational",degraded:"Degraded",down:"Down",unknown:"Awaiting first check"})[value] || "Unknown";
+function metric(label,value){const box=document.createElement("div");box.className="metric";const l=document.createElement("span");l.textContent=label;const v=document.createElement("b");v.textContent=value;box.append(l,v);return box;}
+function renderList(){
+ const query=$("search").value.trim().toLowerCase();
+ const current=monitors.filter(m=>(m.name+" "+m.url).toLowerCase().includes(query));
+ $("total-count").textContent=monitors.length;
+ const up=monitors.filter(m=>(statusData[m.id]?.status)==="operational").length;
+ $("up-count").textContent=up;
+ $("attention-count").textContent=monitors.filter(m=>statusData[m.id] && statusData[m.id].status!=="operational").length;
+ list.replaceChildren();
+ if(!current.length){const empty=document.createElement("div");empty.className="empty";empty.textContent=monitors.length?"No websites match your search.":"No websites are configured for monitoring yet.";list.append(empty);return;}
+ current.forEach(m=>{
+  const data=statusData[m.id]||{};
+  const a=document.createElement("a");a.className="site";a.href="status.html?site="+encodeURIComponent(m.id);
+  const head=document.createElement("div");head.className="site-head";
+  const name=document.createElement("span");name.className="site-name";name.textContent=m.name;
+  const pill=document.createElement("span");pill.className="pill "+(data.status||"unknown");pill.textContent=stateLabel(data.status||"unknown");
+  head.append(name,pill);
+  const url=document.createElement("div");url.className="site-url";url.textContent=m.url;
+  const meta=document.createElement("div");meta.className="site-meta";
+  const uptime=document.createElement("span");uptime.textContent="Uptime "+(Number.isFinite(data.uptimePercent)?data.uptimePercent.toFixed(2)+"%":"—");
+  const response=document.createElement("span");response.textContent="Response "+(Number.isFinite(data.responseTimeMs)?data.responseTimeMs+" ms":"—");
+  meta.append(uptime,response);a.append(head,url,meta);list.append(a);
+ });
+}
+function renderDetail(id){
+ const monitor=monitors.find(m=>m.id===id);if(!monitor)return;
+ const current=statusData[id]||{};const samples=Array.isArray(historyData[id])?historyData[id]:[];
+ $("detail").classList.remove("hidden");$("detail-name").textContent=monitor.name;$("detail-url").textContent=monitor.url;
+ const pill=$("detail-state");pill.className="pill "+(current.status||"unknown");pill.textContent=stateLabel(current.status||"unknown");
+ const successful=samples.filter(s=>s.status==="operational").length;
+ const uptime=samples.length?(successful/samples.length*100).toFixed(2)+"%":"Not enough data";
+ $("detail-metrics").replaceChildren(
+  metric("Recorded uptime",uptime),
+  metric("Latest response",Number.isFinite(current.responseTimeMs)?current.responseTimeMs+" ms":"—"),
+  metric("Latest HTTP status",current.statusCode?"HTTP "+current.statusCode:"Not available"),
+  metric("Total samples",String(samples.length)),
+  metric("Last checked",escDate(current.checkedAt)),
+  metric("Monitoring interval","About 5 minutes")
+ );
+ $("sample-count").textContent=samples.length+" recorded checks";
+ const chart=$("history-chart");chart.replaceChildren();
+ samples.slice(-48).forEach(s=>{const bar=document.createElement("span");bar.className="bar"+(s.status==="down"?" bad":s.status==="degraded"?" degraded":"");bar.style.height=(s.status==="down"||s.status==="degraded"?22:100)+"%";bar.title=escDate(s.checkedAt)+" · "+stateLabel(s.status)+" · "+(s.responseTimeMs??"—")+" ms";chart.append(bar);});
+ const history=$("history-list");history.replaceChildren();
+ samples.slice(-12).reverse().forEach(s=>{const row=document.createElement("div");row.className="history-row";const left=document.createElement("span");left.textContent=escDate(s.checkedAt)+" · "+stateLabel(s.status);const right=document.createElement("strong");right.textContent=(s.statusCode?"HTTP "+s.statusCode:"No HTTP code")+" · "+(Number.isFinite(s.responseTimeMs)?s.responseTimeMs+" ms":"—");row.append(left,right);history.append(row);});
+ $("detail-note").textContent=samples.length<2?"Uptime is calculated only from checks recorded since monitoring began. More history will accumulate on the five-minute schedule.":"Uptime is the percentage of recorded checks classified as operational in the retained history window (up to 24 hours by default). GitHub Actions schedules are best-effort.";
+}
+async function load(){
+ $("refresh").disabled=true;$("updated-at").textContent="Refreshing…";
+ try{
+  const stamp=Date.now();
+  const [config,status,history]=await Promise.all([
+   fetch("monitors.json?v="+stamp,{cache:"no-store"}),
+   fetch("data/status.json?v="+stamp,{cache:"no-store"}),
+   fetch("data/history.json?v="+stamp,{cache:"no-store"})
+  ]);
+  if(!config.ok)throw new Error("Could not load monitor configuration.");
+  const cfg=await config.json();const st=status.ok?await status.json():{monitors:[]};const hi=history.ok?await history.json():{monitors:{}};
+  monitors=Array.isArray(cfg.monitors)?cfg.monitors:[];
+  statusData=Object.fromEntries((st.monitors||[]).map(item=>[item.id,item]));
+  historyData=hi.monitors||{};
+  $("updated-at").textContent="Status snapshot: "+escDate(st.checkedAt);
+  renderList();
+  const id=new URLSearchParams(location.search).get("site");
+  if(id)renderDetail(id);
+  else $("detail").classList.add("hidden");
+ }catch(error){list.innerHTML="";const empty=document.createElement("div");empty.className="empty";empty.textContent=error.message+" Try refreshing the page.";list.append(empty);$("updated-at").textContent="Status unavailable";}
+ finally{$("refresh").disabled=false;}
+}
+$("search").addEventListener("input",renderList);$("refresh").addEventListener("click",load);load();
+})();
+</script>
+</body>
+</html>
