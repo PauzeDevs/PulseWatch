@@ -114,10 +114,10 @@
     .quick-result[hidden]{display:none}.quick-result strong{display:block;margin-bottom:4px}.quick-result.operational{border-color:rgba(5,147,198,.55)}.quick-result.degraded{border-color:rgba(243,198,107,.5)}.quick-result.down,.quick-result.error{border-color:rgba(216,57,149,.55)}
     .quick-result a{display:inline-block;margin-top:7px;color:#dff8ff;text-decoration:underline;text-underline-offset:3px}
     .quick-footnote{font-size:.75rem!important;margin-top:10px!important;margin-bottom:0!important}
-    .motion-ready .reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .62s cubic-bezier(.2,.7,.2,1),transform .62s cubic-bezier(.2,.7,.2,1);transition-delay:var(--reveal-delay,0ms);will-change:transform,opacity}
-    .motion-ready .reveal.is-visible{opacity:1;transform:translate3d(0,0,0);will-change:auto}
+    .reveal.is-visible{animation:reveal-in .55s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--reveal-delay,0ms)}
+    @keyframes reveal-in{from{transform:translate3d(0,14px,0)}to{transform:translate3d(0,0,0)}}
     @media(max-width:650px){.quick-form{flex-direction:column}.quick-form button{width:100%}.quick-check{padding:20px}}
-    @media(prefers-reduced-motion:reduce){.motion-ready .reveal,.motion-ready .reveal.is-visible{opacity:1;transform:none;transition:none;will-change:auto}}
+    @media(prefers-reduced-motion:reduce){.reveal.is-visible{animation:none;transform:none}}
 
   </style>
   <script type="application/ld+json">
