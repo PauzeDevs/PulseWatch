@@ -7,6 +7,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 213
+      },
+      {
+        "checkedAt": "2026-10-30T14:16:41.811Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 88
       }
     ],
     "microsoft": [
@@ -15,6 +21,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 245
+      },
+      {
+        "checkedAt": "2026-10-30T14:16:41.998Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 239
       }
     ],
     "google": [
@@ -23,6 +35,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 158
+      },
+      {
+        "checkedAt": "2026-10-30T14:16:41.851Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 90
       }
     ],
     "github": [
@@ -31,6 +49,12 @@
         "status": "operational",
         "statusCode": 206,
         "responseTimeMs": 142
+      },
+      {
+        "checkedAt": "2026-10-30T14:16:41.838Z",
+        "status": "operational",
+        "statusCode": 206,
+        "responseTimeMs": 76
       }
     ],
     "cloudflare": [
@@ -39,6 +63,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 181
+      },
+      {
+        "checkedAt": "2026-10-30T14:16:41.937Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 174
       }
     ],
     "amazon": [
@@ -47,6 +77,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 233
+      },
+      {
+        "checkedAt": "2026-10-30T14:16:41.870Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 106
       }
     ],
     "wikipedia": [
@@ -55,6 +91,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 160
+      },
+      {
+        "checkedAt": "2026-10-30T14:16:41.867Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 101
       }
     ],
     "youtube": [
@@ -63,6 +105,28 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 260
+      },
+      {
+        "checkedAt": "2026-10-30T14:16:41.979Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 213
+      }
+    ],
+    "pauzex": [
+      {
+        "checkedAt": "2026-10-30T14:16:42.292Z",
+        "status": "operational",
+        "statusCode": 206,
+        "responseTimeMs": 525
+      }
+    ],
+    "pauze": [
+      {
+        "checkedAt": "2026-10-30T14:16:42.083Z",
+        "status": "operational",
+        "statusCode": 206,
+        "responseTimeMs": 313
       }
     ]
   }
