@@ -57,7 +57,7 @@
       return response.json();
     }));
     const answers = replies.flatMap(reply => reply.Status === 0 ? (reply.Answer || []) : []);
-    const addresses = answers.filter(answer => answer.type === 1 || answer.type === 28).map(answer => answer.data);
+    const addresses = [...new Set(answers.filter(answer => answer.type === 1 || answer.type === 28).map(answer => answer.data))];
     if (!addresses.length) throw new Error("This domain has no public A or AAAA DNS record. Check the spelling or DNS settings.");
     const safe = addresses.every(address => address.includes(":") ? isPublicIPv6(address) : isPublicIPv4(address));
     if (!safe) throw new Error("This domain resolves to a private or reserved IP address and cannot be checked.");
