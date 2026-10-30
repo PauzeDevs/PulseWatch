@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pauzedevs.github.io/PulseWatch/sitemap.xml
