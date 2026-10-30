@@ -73,17 +73,20 @@
       headers: { range: "bytes=0-0" },
       signal: AbortSignal.timeout(9000)
     };
+    const startedAt = performance.now();
     try {
       const response = await fetch(url, options);
+      const responseTimeMs = Math.round(performance.now() - startedAt);
       if (response.type === "opaqueredirect" || (response.status >= 300 && response.status < 400)) {
-        return { kind: "redirect", statusCode: response.status || null, message: "HTTPS endpoint responded with a redirect. Browser security hides the destination." };
+        return { kind: "redirect", statusCode: response.status || null, responseTimeMs, message: "HTTPS endpoint responded with a redirect. Browser security hides the destination." };
       }
       try { await response.body?.cancel(); } catch {}
-      if (response.status >= 500) return { kind: "down", statusCode: response.status, message: "The server returned an HTTP 5xx error." };
-      if (response.status >= 400) return { kind: "degraded", statusCode: response.status, message: "The server returned an HTTP 4xx response." };
-      return { kind: "operational", statusCode: response.status, message: "HTTPS request completed successfully." };
+      if (response.status >= 500) return { kind: "down", statusCode: response.status, responseTimeMs, message: "The server returned an HTTP 5xx error." };
+      if (response.status >= 400) return { kind: "degraded", statusCode: response.status, responseTimeMs, message: "The server returned an HTTP 4xx response." };
+      return { kind: "operational", statusCode: response.status, responseTimeMs, message: "HTTPS request completed successfully." };
     } catch (corsOrNetworkError) {
       try {
+        const opaqueStartedAt = performance.now();
         const opaque = await fetch(url, {
           method: "GET",
           mode: "no-cors",
@@ -92,13 +95,14 @@
           headers: { range: "bytes=0-0" },
           signal: AbortSignal.timeout(9000)
         });
+        const responseTimeMs = Math.round(performance.now() - opaqueStartedAt);
         if (opaque.type === "opaqueredirect") {
-          return { kind: "redirect", statusCode: null, message: "HTTPS endpoint responded with a redirect. The browser hides the final destination." };
+          return { kind: "redirect", statusCode: null, responseTimeMs, message: "HTTPS endpoint responded with a redirect. The browser hides the final destination." };
         }
         try { await opaque.body?.cancel(); } catch {}
-        return { kind: "reachable", statusCode: null, message: "HTTPS connection succeeded. This website blocks browser access to its HTTP status (CORS), so the exact status code is hidden." };
+        return { kind: "reachable", statusCode: null, responseTimeMs, message: "HTTPS connection succeeded. This website blocks browser access to its HTTP status (CORS), so the exact status code is hidden." };
       } catch (networkError) {
-        return { kind: "unreachable", statusCode: null, message: "DNS resolves, but the HTTPS endpoint could not be reached. Check its TLS certificate, server, or network restrictions." };
+        return { kind: "unreachable", statusCode: null, responseTimeMs: null, message: "DNS resolves, but the HTTPS endpoint could not be reached. Check its TLS certificate, server, or network restrictions." };
       }
     }
   }
