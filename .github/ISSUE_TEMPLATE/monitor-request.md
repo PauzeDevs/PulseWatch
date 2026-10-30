@@ -2,7 +2,6 @@
 name: Request a website monitor
 about: Suggest a public website for PulseWatch to monitor
 title: "[Monitor request] "
-labels: monitor-request
 assignees: ""
 ---
 
