@@ -1,0 +1,7 @@
+{
+  "checks": {
+    "timeoutMs": 10000,
+    "historyLimit": 288
+  },
+  "monitors": []
+}
