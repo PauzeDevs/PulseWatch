@@ -194,7 +194,7 @@
         const grid = document.createElement("div"); grid.className = "result-grid";
         const metrics = [
           ["HTTP status", details.statusCode ? "HTTP " + details.statusCode : "Not exposed"],
-          ["Response / ping", Number.isFinite(details.responseTimeMs) ? details.responseTimeMs + " ms" : "Timed out"],
+          ["Response time", Number.isFinite(details.responseTimeMs) ? details.responseTimeMs + " ms" : "Timed out"],
           ["DNS records", details.addresses.length + " public IP" + (details.addresses.length === 1 ? "" : "s")],
           ["HTTPS", details.https],
           ["Domain", details.hostname],
