@@ -52,6 +52,26 @@
     .footer{border-top:1px solid rgba(252,255,255,.14);padding:25px 0 40px;color:var(--muted);font-size:.9rem;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
     @media(max-width:700px){.hero{padding:70px 0 55px}.cards{grid-template-columns:1fr}.metric-grid{grid-template-columns:1fr}.top{align-items:flex-start;gap:15px;flex-direction:column}nav{gap:16px;flex-wrap:wrap}.preview-head{flex-direction:column}.wrap{width:min(100% - 30px,1080px)}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
+    .dashboard{position:relative;z-index:1}.dashboard-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:20px;border-bottom:1px solid rgba(252,255,255,.14)}
+    .dash-brand{display:flex;align-items:center;gap:10px;font-weight:750;letter-spacing:-.03em}.dash-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--blue),var(--pink));box-shadow:0 5px 22px rgba(5,147,198,.3)}.dash-mark svg{width:19px;height:19px}
+    .demo-tag{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#dff8ff;border:1px solid rgba(252,255,255,.2);background:rgba(5,147,198,.16);padding:5px 9px;border-radius:99px}
+    .dash-content{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(220px,.85fr);gap:15px;padding-top:18px}.dash-main,.dash-side{display:grid;gap:13px;align-content:start}
+    .dash-panel{background:rgba(5,20,32,.42);border:1px solid rgba(252,255,255,.16);border-radius:16px;padding:17px;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
+    .dash-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}.dash-panel-head strong{font-size:.94rem}.dash-muted{color:var(--muted);font-size:.78rem}
+    .health-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border-radius:99px;background:rgba(5,147,198,.18);color:#e8faff;font-size:.72rem;border:1px solid rgba(5,147,198,.35)}
+    .pulse-dot{width:7px;height:7px;border-radius:50%;background:#8be9f4;box-shadow:0 0 0 0 rgba(5,147,198,.55);animation:pulseGlow 2s infinite}
+    @keyframes pulseGlow{0%{box-shadow:0 0 0 0 rgba(5,147,198,.55)}70%{box-shadow:0 0 0 7px rgba(5,147,198,0)}100%{box-shadow:0 0 0 0 rgba(5,147,198,0)}}
+    .site-list{display:grid}.site-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid rgba(252,255,255,.09)}.site-row:first-child{border-top:0;padding-top:0}
+    .site-info{display:flex;align-items:center;gap:10px;min-width:0}.site-icon{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,rgba(5,147,198,.28),rgba(216,57,149,.18));font-size:.75rem;font-weight:800}
+    .site-name{font-size:.86rem;font-weight:650;overflow-wrap:anywhere}.site-url{font-size:.72rem;color:var(--muted)}.site-state{display:inline-flex;align-items:center;gap:6px;color:#baf4f2;font-size:.72rem;white-space:nowrap}.site-state:before{content:"";width:6px;height:6px;border-radius:50%;background:#8be9f4;box-shadow:0 0 9px rgba(5,147,198,.8)}
+    .dash-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.dash-stat{padding:13px;border:1px solid rgba(252,255,255,.12);border-radius:12px;background:rgba(252,255,255,.045)}.dash-stat span{display:block;color:var(--muted);font-size:.7rem}.dash-stat b{display:block;font-size:1.35rem;letter-spacing:-.04em;margin-top:3px}.trend{display:flex;align-items:center;gap:6px;color:#baf4f2;font-size:.7rem;margin-top:2px}
+    .chart-wrap{height:92px;margin-top:7px}.chart-wrap svg{width:100%;height:100%;overflow:visible}.chart-grid{stroke:rgba(252,255,255,.12);stroke-width:1;stroke-dasharray:3 5}.chart-line{fill:none;stroke:#39c5e8;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:260;stroke-dashoffset:260;animation:drawLine 2s .25s ease forwards}.chart-fill{fill:url(#chartGradient);opacity:.5}@keyframes drawLine{to{stroke-dashoffset:0}}
+    .activity{display:grid;gap:12px}.activity-item{display:flex;gap:10px;align-items:flex-start}.activity-icon{width:25px;height:25px;flex:0 0 25px;border-radius:8px;display:grid;place-items:center;background:rgba(216,57,149,.16);color:#ffc3e4;font-size:.75rem}.activity-item p{margin:0;font-size:.76rem;line-height:1.45}.activity-item small{color:var(--muted);font-size:.68rem}
+    .preview-foot{margin-top:14px;color:rgba(252,255,255,.56);font-size:.68rem;text-align:right}
+    @media(max-width:700px){.dash-content{grid-template-columns:1fr}.dashboard-top{align-items:flex-start}.site-row{align-items:flex-start}.preview{padding:16px}}
+    @media(prefers-reduced-motion:reduce){.pulse-dot,.chart-line{animation:none!important}.chart-line{stroke-dashoffset:0}}
+
   </style>
   <script type="application/ld+json">
   {
@@ -77,12 +97,51 @@
         <p>PulseWatch is a lightweight website monitoring project focused on availability checks, response-time visibility, and a readable history of service incidents.</p>
         <div class="actions"><a class="btn primary" href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">Explore the project</a><a class="btn secondary" href="#features">Explore features</a></div>
       </section>
-      <section class="preview" aria-label="PulseWatch product overview">
-        <div class="preview-head"><span>PulseWatch overview</span><span>Project preview · Monitoring not yet connected</span></div>
-        <div class="metric-grid">
-          <div class="metric"><b>Uptime</b><small>Availability checks planned</small></div>
-          <div class="metric"><b>Latency</b><small>Response-time tracking planned</small></div>
-          <div class="metric"><b>Incidents</b><small>Service history planned</small></div>
+      <section class="preview" aria-label="PulseWatch dashboard preview">
+        <div class="dashboard">
+          <div class="dashboard-top">
+            <div class="dash-brand"><span class="dash-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 13h4l3-8 4 14 3-8h4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>PulseWatch <span class="dash-muted">/ Overview</span></span></div>
+            <span class="demo-tag">Interface preview</span>
+          </div>
+          <div class="dash-content">
+            <div class="dash-main">
+              <div class="dash-panel">
+                <div class="dash-panel-head"><strong>Monitored websites</strong><span class="health-pill"><i class="pulse-dot"></i> Demo status</span></div>
+                <div class="site-list">
+                  <div class="site-row"><div class="site-info"><span class="site-icon">PW</span><div><div class="site-name">example.com</div><div class="site-url">https://example.com</div></div></div><span class="site-state">Operational</span></div>
+                  <div class="site-row"><div class="site-info"><span class="site-icon">AP</span><div><div class="site-name">api.example.com</div><div class="site-url">https://api.example.com</div></div></div><span class="site-state">Operational</span></div>
+                  <div class="site-row"><div class="site-info"><span class="site-icon">ST</span><div><div class="site-name">status.example.com</div><div class="site-url">https://status.example.com</div></div></div><span class="site-state">Operational</span></div>
+                </div>
+              </div>
+              <div class="dash-panel">
+                <div class="dash-panel-head"><strong>Response time</strong><span class="dash-muted">Illustrative · 24 hours</span></div>
+                <div class="chart-wrap"><svg viewBox="0 0 520 100" role="img" aria-label="Decorative response time line chart">
+                  <defs><linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0593C6" stop-opacity=".55"/><stop offset="1" stop-color="#0593C6" stop-opacity="0"/></linearGradient></defs>
+                  <path class="chart-grid" d="M0 15H520M0 48H520M0 81H520"/><path class="chart-fill" d="M0 67 L38 61 L76 65 L114 43 L152 50 L190 32 L228 41 L266 24 L304 39 L342 30 L380 47 L418 27 L456 34 L494 17 L520 22 L520 100 L0 100Z"/>
+                  <path class="chart-line" d="M0 67 L38 61 L76 65 L114 43 L152 50 L190 32 L228 41 L266 24 L304 39 L342 30 L380 47 L418 27 L456 34 L494 17 L520 22"/>
+                </svg></div>
+                <div class="dash-muted">A sample visualization — no live measurements are connected.</div>
+              </div>
+            </div>
+            <aside class="dash-side">
+              <div class="dash-panel"><div class="dash-panel-head"><strong>Health snapshot</strong><span class="dash-muted">Demo data</span></div>
+                <div class="dash-stats">
+                  <div class="dash-stat"><span>Uptime</span><b>99.98%</b><small class="trend">Sample metric</small></div>
+                  <div class="dash-stat"><span>Avg. response</span><b>184 ms</b><small class="trend">Sample metric</small></div>
+                  <div class="dash-stat"><span>Websites</span><b>03</b><small class="dash-muted">Illustrative</small></div>
+                  <div class="dash-stat"><span>Incidents</span><b>00</b><small class="dash-muted">Illustrative</small></div>
+                </div>
+              </div>
+              <div class="dash-panel"><div class="dash-panel-head"><strong>Recent activity</strong><span class="dash-muted">Preview</span></div>
+                <div class="activity">
+                  <div class="activity-item"><span class="activity-icon">✓</span><div><p>Example endpoint check passed</p><small>Illustrative event</small></div></div>
+                  <div class="activity-item"><span class="activity-icon">↗</span><div><p>Response time recorded</p><small>Illustrative event</small></div></div>
+                  <div class="activity-item"><span class="activity-icon">＋</span><div><p>Monitor configuration ready</p><small>Illustrative event</small></div></div>
+                </div>
+              </div>
+            </aside>
+          </div>
+          <div class="preview-foot">All names, statuses and metrics shown here are sample UI data, not live monitoring results.</div>
         </div>
       </section>
       <section class="section" id="features">
