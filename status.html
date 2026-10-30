@@ -23,19 +23,7 @@
 <div class="toolbar"><input class="search" id="search" type="search" placeholder="Search websites…" aria-label="Search monitored websites"><button class="refresh" id="refresh" type="button">Refresh status</button></div>
 <div class="section-title"><h2>Monitored websites</h2><span class="muted" id="updated-at">Loading status data…</span></div>
 <div class="site-list" id="site-list" aria-live="polite"><div class="empty">Loading monitored websites…</div></div>
-<section class="panel hidden" id="detail" aria-live="polite">
-<a class="back" href="status.html">← All monitored websites</a>
-<div class="detail-head"><div><h2 id="detail-name">Website</h2><div class="detail-url" id="detail-url"></div></div><span class="pill unknown" id="detail-state">Waiting for first check</span></div>
-<div class="metrics" id="detail-metrics"></div>
-<div class="section-title"><h2>Performance overview</h2><span class="muted" id="sample-count"></span></div>
-<div class="periods" role="group" aria-label="Chart time range"><button class="period" data-period="48" aria-pressed="false">4 hours</button><button class="period" data-period="72" aria-pressed="false">6 hours</button><button class="period" data-period="288" aria-pressed="true">24 hours</button></div>
-<div class="chart-panel"><div class="chart-head"><strong>Uptime over time</strong><span id="uptime-chart-caption">Based on recorded checks</span></div><div id="uptime-chart" class="chart-empty">Waiting for monitoring samples…</div><div class="chart-legend"><span><i class="legend-dot"></i>Operational</span><span><i class="legend-dot pink"></i>Incident / degraded</span></div></div>
-<div class="chart-panel"><div class="chart-head"><strong>Response time</strong><span id="response-chart-caption">Milliseconds per check</span></div><div id="response-chart" class="chart-empty">Waiting for response-time samples…</div></div>
-<div class="chart-panel"><div class="chart-head"><strong>Availability timeline</strong><span>Each segment represents one check</span></div><div class="uptime-strip" id="uptime-strip"></div></div>
-<div class="section-title"><h2>Incident history</h2><span class="muted" id="incident-count"></span></div><div id="incident-list"></div>
-<div class="section-title"><h2>Recent checks</h2><span class="muted" id="history-count"></span></div><div class="history-list" id="history-list"></div>
-<p class="muted" id="detail-note" style="font-size:.8rem;margin-top:18px"></p>
-</section>
+
 </main>
 <footer class="footer">© 2026 PauzeX Developments · PulseWatch · Monitoring is best-effort and not an uptime SLA.</footer>
 </div>
@@ -59,7 +47,7 @@ function renderList(){
  if(!current.length){const empty=document.createElement("div");empty.className="empty";empty.textContent=monitors.length?"No websites match your search.":"No websites are configured for monitoring yet.";list.append(empty);return;}
  current.forEach(m=>{
   const data=statusData[m.id]||{};
-  const a=document.createElement("a");a.className="site";a.href="status.html?site="+encodeURIComponent(m.id);
+  const a=document.createElement("a");a.className="site";a.href="website.html?site="+encodeURIComponent(m.id);
   const head=document.createElement("div");head.className="site-head";
   const name=document.createElement("span");name.className="site-name";name.textContent=m.name;
   const pill=document.createElement("span");pill.className="pill "+(data.status||"unknown");pill.textContent=stateLabel(data.status||"unknown");
@@ -70,61 +58,6 @@ function renderList(){
   const response=document.createElement("span");response.textContent="Response "+(Number.isFinite(data.responseTimeMs)?data.responseTimeMs+" ms":"—");
   meta.append(uptime,response);a.append(head,url,meta);list.append(a);
  });
-}
-let selectedPeriod=288;
-function svgLineChart(samples,key,options={}){
- const values=samples.map(s=>Number.isFinite(s[key])?s[key]:null);
- const valid=values.filter(v=>v!==null);
- if(!valid.length)return '<div class="chart-empty">No recorded '+(key==="responseTimeMs"?"response-time":"uptime")+' data yet. Charts will populate after scheduled checks.</div>';
- const width=760,height=190,left=42,right=12,top=14,bottom=28,plotW=width-left-right,plotH=height-top-bottom;
- const min=options.min??Math.min(0,...valid),max=options.max??Math.max(1,...valid),range=max-min||1;
- const points=values.map((v,i)=>v===null?null:[left+(i/Math.max(1,values.length-1))*plotW,top+((max-v)/range)*plotH]);
- const path=points.map((p,i)=>p?(i===0||!points[i-1]?"M":"L")+p[0].toFixed(1)+","+p[1].toFixed(1):"").filter(Boolean).join(" ");
- const area=path+" L "+(left+plotW)+" "+(top+plotH)+" L "+left+" "+(top+plotH)+" Z";
- const ticks=[0,.5,1].map(f=>{const y=top+plotH*f;const value=max-(max-min)*f;return '<line class="gridline" x1="'+left+'" y1="'+y+'" x2="'+(left+plotW)+'" y2="'+y+'"/><text x="3" y="'+(y+4)+'">'+(options.format?options.format(value):Math.round(value))+'</text>';}).join("");
- const first=samples[0]?.checkedAt,last=samples.at(-1)?.checkedAt;
- return '<svg class="chart" viewBox="0 0 '+width+' '+height+'" role="img" aria-label="'+options.label+'">'+ticks+'<path class="area" d="'+area+'"/><path class="series" d="'+path+'"/>'+points.map(p=>p?'<circle class="point" cx="'+p[0]+'" cy="'+p[1]+'" r="2.8"/>':"").join("")+'<text x="'+left+'" y="'+(height-5)+'">'+(first?new Date(first).toLocaleDateString():"")+'</text><text x="'+(left+plotW-70)+'" y="'+(height-5)+'">'+(last?new Date(last).toLocaleDateString():"")+'</text></svg>';
-}
-function renderDetail(id){
- const monitor=monitors.find(m=>m.id===id);if(!monitor)return;
- const current=statusData[id]||{};const all=Array.isArray(historyData[id])?historyData[id]:[];
- const samples=all.slice(-selectedPeriod);
- $("detail").classList.remove("hidden");$("detail-name").textContent=monitor.name;$("detail-url").textContent=monitor.url;
- const pill=$("detail-state");pill.className="pill "+(current.status||"unknown");pill.textContent=stateLabel(current.status||"unknown");
- const successful=samples.filter(s=>s.status==="operational").length;
- const uptime=samples.length?(successful/samples.length*100).toFixed(2)+"%":"Not enough data";
- const responseValues=samples.map(s=>s.responseTimeMs).filter(Number.isFinite);
- const average=responseValues.length?Math.round(responseValues.reduce((a,b)=>a+b,0)/responseValues.length):null;
- const fastest=responseValues.length?Math.min(...responseValues):null;
- const slowest=responseValues.length?Math.max(...responseValues):null;
- const incidents=samples.filter(s=>s.status==="down"||s.status==="degraded");
- $("detail-metrics").replaceChildren(
-  metric("Recorded uptime",uptime),
-  metric("Latest response",Number.isFinite(current.responseTimeMs)?current.responseTimeMs+" ms":"—"),
-  metric("Average response",average===null?"—":average+" ms"),
-  metric("Availability checks",samples.length.toLocaleString()),
-  metric("Incidents",String(incidents.length)),
-  metric("Fastest response",fastest===null?"—":fastest+" ms"),
-  metric("Slowest response",slowest===null?"—":slowest+" ms"),
-  metric("Last checked",escDate(current.checkedAt))
- );
- $("sample-count").textContent=samples.length+" samples shown";
- $("uptime-chart").outerHTML='<div id="uptime-chart">'+svgLineChart(samples,"uptimeValue",{min:0,max:100,label:"Cumulative uptime percentage over time",format:v=>Math.round(v)+"%"})+'</div>';
- // Uptime series is cumulative within the selected history window, not a fabricated per-check value.
- let successCount=0;
- const uptimeSamples=samples.map(s=>{if(s.status==="operational")successCount++;return {...s,uptimeValue:successCount/Math.max(1,samples.indexOf(s)+1)*100};});
- $("uptime-chart").innerHTML=svgLineChart(uptimeSamples,"uptimeValue",{min:0,max:100,label:"Cumulative uptime percentage over time",format:v=>Math.round(v)+"%"});
- $("response-chart").outerHTML='<div id="response-chart">'+svgLineChart(samples,"responseTimeMs",{min:0,max:Math.max(500,...responseValues),label:"Website response time in milliseconds",format:v=>Math.round(v)+"ms"})+'</div>';
- $("uptime-strip").replaceChildren();
- samples.slice(-48).forEach(s=>{const tick=document.createElement("span");tick.className="uptime-tick "+(s.status==="operational"?"":s.status==="degraded"?"degraded":s.status==="down"?"down":"unknown");tick.title=escDate(s.checkedAt)+" · "+stateLabel(s.status);$("uptime-strip").append(tick);});
- $("incident-count").textContent=incidents.length+" in selected period";
- const incidentList=$("incident-list");incidentList.replaceChildren();
- if(!incidents.length){const empty=document.createElement("div");empty.className="chart-empty";empty.textContent="No incidents recorded in this period.";incidentList.append(empty);}
- incidents.slice().reverse().slice(0,10).forEach(s=>{const item=document.createElement("div");item.className="incident";const title=document.createElement("strong");title.textContent=stateLabel(s.status)+" · "+escDate(s.checkedAt);const info=document.createElement("span");info.textContent=(s.statusCode?"HTTP "+s.statusCode:"No HTTP response")+" · "+(Number.isFinite(s.responseTimeMs)?s.responseTimeMs+" ms":"No response time");item.append(title,info);incidentList.append(item);});
- $("history-count").textContent=Math.min(12,samples.length)+" latest";
- const history=$("history-list");history.replaceChildren();
- samples.slice(-12).reverse().forEach(s=>{const row=document.createElement("div");row.className="history-row";const left=document.createElement("span");left.textContent=escDate(s.checkedAt)+" · "+stateLabel(s.status);const right=document.createElement("strong");right.textContent=(s.statusCode?"HTTP "+s.statusCode:"No HTTP code")+" · "+(Number.isFinite(s.responseTimeMs)?s.responseTimeMs+" ms":"—");row.append(left,right);history.append(row);});
- $("detail-note").textContent="Uptime is calculated from operational checks divided by all recorded checks in the selected retained period. The history store currently retains up to 288 checks (approximately 24 hours at a five-minute cadence); longer ranges only become available if the retention limit is increased. Monitoring schedules are best-effort.";
 }
 async function load(){
  $("refresh").disabled=true;$("updated-at").textContent="Refreshing…";
@@ -142,15 +75,11 @@ async function load(){
   historyData=hi.monitors||{};
   $("updated-at").textContent="Status snapshot: "+escDate(st.checkedAt);
   renderList();
-  const id=new URLSearchParams(location.search).get("site");
-  if(id)renderDetail(id);
-  else $("detail").classList.add("hidden");
+
  }catch(error){list.innerHTML="";const empty=document.createElement("div");empty.className="empty";empty.textContent=error.message+" Try refreshing the page.";list.append(empty);$("updated-at").textContent="Status unavailable";}
  finally{$("refresh").disabled=false;}
 }
-$("search").addEventListener("input",renderList);$("refresh").addEventListener("click",load);
-document.querySelectorAll("[data-period]").forEach(button=>button.addEventListener("click",()=>{selectedPeriod=Number(button.dataset.period);document.querySelectorAll("[data-period]").forEach(item=>item.setAttribute("aria-pressed",String(item===button)));const id=new URLSearchParams(location.search).get("site");if(id)renderDetail(id);}));
-load();
+$("search").addEventListener("input",renderList);$("refresh").addEventListener("click",load);load();
 })();
 </script>
 </body>
