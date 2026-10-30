@@ -28,11 +28,11 @@
 </head>
 <body>
   <div class="wrap">
-    <header class="top"><a class="brand" href="./">pulse<span>watch</span></a><a class="back" href="./">← Back to dashboard</a></header>
+    <header class="top"><a class="brand" href="./">pulse<span>watch</span></a><a class="back" href="status.html">View monitored websites →</a></header>
     <main>
       <span class="eyebrow">Community monitor requests</span>
       <h1>Put a website <span>on the radar.</span></h1>
-      <p class="lead">Suggest a public website for PulseWatch to monitor. Requests go to GitHub for review; approved sites are added to the scheduled checks and appear on the public dashboard.</p>
+      <p class="lead">Suggest a public website for PulseWatch to monitor. Your request is sent to GitHub; the automated workflow validates it and adds eligible public websites to scheduled checks.</p>
       <form class="panel" id="request-form">
         <label for="site-name">Website or service name</label>
         <input id="site-name" name="name" maxlength="80" placeholder="e.g. My portfolio" required>
@@ -40,7 +40,7 @@
         <input id="site-url" name="url" type="url" maxlength="2048" placeholder="https://example.com" required>
         <label for="reason">Why should we monitor it? <span class="hint">(optional)</span></label>
         <textarea id="reason" name="reason" maxlength="500" placeholder="Tell us briefly why this website would be useful to track."></textarea>
-        <p class="notice">Requests are reviewed by the PulseWatch maintainers before monitoring begins. Do not submit private dashboards, internal network addresses, login-only pages, or URLs containing passwords, API keys, or other secrets.</p>
+        <p class="notice">Valid requests are automatically checked and added to monitoring. Invalid or duplicate requests are not added. Do not submit private dashboards, internal network addresses, login-only pages, or URLs containing passwords, API keys, or other secrets.</p>
         <button type="submit" id="submit-request">Verify domain & continue</button>
         <output class="form-status" id="validation-status" role="status" aria-live="polite" hidden></output>
         <p class="fine">GitHub account sign-in may be required to submit the request. Submitting a request does not guarantee acceptance.</p>
