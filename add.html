@@ -75,10 +75,18 @@
         if (checked.result.kind === "unreachable") {
           throw new Error("The domain has DNS records, but its HTTPS endpoint could not be reached. Fix the certificate or server before submitting it.");
         }
-        showValidation("Verified: public DNS exists and the HTTPS endpoint responded. Opening the GitHub review request…", "success");
         const title = "[Monitor request] " + name;
         const body = "### Website name\n" + name + "\n\n### Website URL\n" + checked.url.href + "\n\n### Domain validation\nPublic DNS resolved; HTTPS endpoint responded (check type: " + checked.result.kind + ").\n\n### Why should this website be monitored?\n" + (reason || "Not provided") + "\n";
         const target = "https://github.com/PauzeDevs/PulseWatch/issues/new?title=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
+        showValidation("Verified: public DNS exists and HTTPS responded. Redirecting to GitHub… If it doesn't open, use the link below.", "success");
+        submitButton.textContent = "Opening GitHub…";
+        const fallback = document.createElement("a");
+        fallback.href = target;
+        fallback.textContent = "Open the pre-filled GitHub request";
+        fallback.style.display = "inline-block";
+        fallback.style.marginTop = "10px";
+        fallback.style.fontWeight = "700";
+        validationStatus.append(document.createElement("br"), fallback);
         window.location.assign(target);
       } catch (error) {
         showValidation(error.message || "Domain validation failed. Please check the URL and try again.", "error");
