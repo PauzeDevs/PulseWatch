@@ -28,7 +28,7 @@
 <div class="detail-head"><div><h2 id="detail-name">Website</h2><div class="detail-url" id="detail-url"></div></div><span class="pill unknown" id="detail-state">Waiting for first check</span></div>
 <div class="metrics" id="detail-metrics"></div>
 <div class="section-title"><h2>Performance overview</h2><span class="muted" id="sample-count"></span></div>
-<div class="periods" role="group" aria-label="Chart time range"><button class="period" data-period="24" aria-pressed="true">24 hours</button><button class="period" data-period="72" aria-pressed="false">72 hours</button><button class="period" data-period="288" aria-pressed="false">All retained</button></div>
+<div class="periods" role="group" aria-label="Chart time range"><button class="period" data-period="48" aria-pressed="false">4 hours</button><button class="period" data-period="72" aria-pressed="false">6 hours</button><button class="period" data-period="288" aria-pressed="true">24 hours</button></div>
 <div class="chart-panel"><div class="chart-head"><strong>Uptime over time</strong><span id="uptime-chart-caption">Based on recorded checks</span></div><div id="uptime-chart" class="chart-empty">Waiting for monitoring samples…</div><div class="chart-legend"><span><i class="legend-dot"></i>Operational</span><span><i class="legend-dot pink"></i>Incident / degraded</span></div></div>
 <div class="chart-panel"><div class="chart-head"><strong>Response time</strong><span id="response-chart-caption">Milliseconds per check</span></div><div id="response-chart" class="chart-empty">Waiting for response-time samples…</div></div>
 <div class="chart-panel"><div class="chart-head"><strong>Availability timeline</strong><span>Each segment represents one check</span></div><div class="uptime-strip" id="uptime-strip"></div></div>
@@ -71,7 +71,7 @@ function renderList(){
   meta.append(uptime,response);a.append(head,url,meta);list.append(a);
  });
 }
-let selectedPeriod=24;
+let selectedPeriod=288;
 function svgLineChart(samples,key,options={}){
  const values=samples.map(s=>Number.isFinite(s[key])?s[key]:null);
  const valid=values.filter(v=>v!==null);
