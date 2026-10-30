@@ -1,0 +1,45 @@
+name: PulseWatch Quality Checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/**"
+      - "tests/**"
+      - "scripts/**"
+      - "index.html"
+      - "add.html"
+      - ".github/workflows/quality.yml"
+  pull_request:
+    paths:
+      - "assets/**"
+      - "tests/**"
+      - "scripts/**"
+      - "index.html"
+      - "add.html"
+      - ".github/workflows/quality.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: |
+          node --check assets/site-probe.js
+          node --check assets/scroll-reveal.js
+          node --check scripts/check.mjs
+          node --check scripts/check-inline-scripts.mjs
+      - name: Validate inline browser scripts
+        run: node scripts/check-inline-scripts.mjs
+      - name: Run automated tests
+        run: node --test
