@@ -110,5 +110,6 @@
     return { url, addresses, result };
   }
 
-  window.PulseWatchProbe = { parseHttpsUrl, resolvePublicDomain, probeHttps, validateAndProbe };
+  const hostGlobal = typeof window !== "undefined" ? window : globalThis;
+  hostGlobal.PulseWatchProbe = { parseHttpsUrl, resolvePublicDomain, probeHttps, validateAndProbe };
 })();
