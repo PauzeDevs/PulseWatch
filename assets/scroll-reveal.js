@@ -1,20 +1,22 @@
 (function () {
   "use strict";
 
-  const root = document.documentElement;
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduceMotion || !("IntersectionObserver" in window)) return;
-
-  const targets = Array.from(document.querySelectorAll(".top, .hero, .quick-check, .preview, .section, .card, .panel, .footer, main > .eyebrow, main > h1, main > .lead"));
+  const targets = Array.from(document.querySelectorAll(
+    ".top, .hero, .quick-check, .section, .card, .footer"
+  ));
   if (!targets.length) return;
 
-  root.classList.add("motion-ready");
+  // Content remains visible even if IntersectionObserver is unavailable or fails.
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      !("IntersectionObserver" in window)) {
+    targets.forEach(element => element.classList.add("is-visible"));
+    return;
+  }
 
   let cardIndex = 0;
   targets.forEach(element => {
-    element.classList.add("reveal");
     if (element.classList.contains("card")) {
-      element.style.setProperty("--reveal-delay", Math.min(cardIndex++, 5) * 65 + "ms");
+      element.style.setProperty("--reveal-delay", Math.min(cardIndex++, 5) * 55 + "ms");
     }
   });
 
@@ -24,10 +26,7 @@
       entry.target.classList.add("is-visible");
       currentObserver.unobserve(entry.target);
     });
-  }, {
-    threshold: 0.08,
-    rootMargin: "0px 0px -7% 0px"
-  });
+  }, { threshold: 0.01, rootMargin: "0px 0px -4% 0px" });
 
   targets.forEach(element => observer.observe(element));
 })();
