@@ -98,6 +98,18 @@
     .quick-form input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(5,147,198,.15)}
     .quick-form button{padding:12px 17px;border:0;border-radius:12px;background:linear-gradient(110deg,var(--blue),var(--pink));color:white;font:inherit;font-weight:750;cursor:pointer;white-space:nowrap}
     .quick-form button:disabled{opacity:.65;cursor:wait}
+
+    .quick-result{margin-top:18px;padding:18px;border:1px solid rgba(252,255,255,.18);border-radius:15px;background:rgba(4,14,24,.5)}
+    .quick-result[hidden]{display:none}.quick-result.operational{border-color:rgba(5,147,198,.55)}.quick-result.degraded{border-color:rgba(243,198,107,.55)}.quick-result.down,.quick-result.error{border-color:rgba(216,57,149,.6)}
+    .result-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:5px}.result-heading strong{font-size:1.05rem}
+    .result-url{color:var(--muted);font-size:.8rem;overflow-wrap:anywhere;margin-bottom:15px}
+    .result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .result-metric{padding:13px;border-radius:12px;border:1px solid rgba(252,255,255,.13);background:rgba(252,255,255,.045);min-width:0}
+    .result-metric span{display:block;color:var(--muted);font-size:.72rem}.result-metric b{display:block;font-size:1.12rem;overflow-wrap:anywhere;margin-top:4px}
+    .result-detail{margin-top:13px;color:var(--muted);font-size:.82rem;overflow-wrap:anywhere}
+    .result-note{margin-top:12px;color:var(--muted);font-size:.74rem}
+    @media(max-width:600px){.result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
     .quick-result{margin-top:15px;padding:14px 16px;border:1px solid rgba(252,255,255,.17);border-radius:13px;background:rgba(4,14,24,.4);font-size:.88rem}
     .quick-result[hidden]{display:none}.quick-result strong{display:block;margin-bottom:4px}.quick-result.operational{border-color:rgba(5,147,198,.55)}.quick-result.degraded{border-color:rgba(243,198,107,.5)}.quick-result.down,.quick-result.error{border-color:rgba(216,57,149,.55)}
     .quick-result a{display:inline-block;margin-top:7px;color:#dff8ff;text-decoration:underline;text-underline-offset:3px}
@@ -143,40 +155,6 @@
         <div class="quick-result" id="quick-check-result" role="status" aria-live="polite" hidden></div>
         <p class="quick-footnote">Quick checks are one-time browser tests, not continuous monitoring. Some sites hide HTTP status codes from browsers through CORS; PulseWatch will show that limitation rather than guess.</p>
       </section>
-      <section class="preview" aria-label="PulseWatch live monitoring dashboard">
-        <div class="dashboard">
-          <div class="dashboard-top">
-            <div class="dash-brand"><span class="dash-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 13h4l3-8 4 14 3-8h4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>PulseWatch <span class="dash-muted">/ Overview</span></span></div>
-            <span class="monitor-state unknown" id="overall-state" aria-live="polite">Checking status</span>
-          </div>
-          <div class="dash-content">
-            <div class="dash-main">
-              <div class="dash-panel">
-                <div class="dash-panel-head"><strong>Monitored websites</strong><span class="refresh-note" id="last-checked">Waiting for first check</span></div>
-                <div class="site-list" id="monitor-list" aria-live="polite"><div class="empty-state"><strong>No monitoring data yet</strong>PulseWatch will list configured websites here after its first scheduled check.</div></div>
-              </div>
-              <div class="dash-panel">
-                <div class="dash-panel-head"><strong>Response time</strong><span class="dash-muted">Recent checks</span></div>
-                <div class="chart-wrap" id="response-chart"><div class="chart-empty">Waiting for response-time samples</div></div>
-              </div>
-            </div>
-            <aside class="dash-side">
-              <div class="dash-panel"><div class="dash-panel-head"><strong>Health snapshot</strong><span class="dash-muted">Live data</span></div>
-                <div class="dash-stats">
-                  <div class="dash-stat"><span>Avg. uptime</span><b class="metric-value" id="metric-uptime">—</b><small class="dash-muted">From recorded checks</small></div>
-                  <div class="dash-stat"><span>Avg. response</span><b class="metric-value" id="metric-latency">—</b><small class="dash-muted">Latest check results</small></div>
-                  <div class="dash-stat"><span>Websites</span><b class="metric-value" id="metric-sites">0</b><small class="dash-muted">Configured monitors</small></div>
-                  <div class="dash-stat"><span>Down</span><b class="metric-value" id="metric-down">0</b><small class="dash-muted">Current failures</small></div>
-                </div>
-              </div>
-              <div class="dash-panel"><div class="dash-panel-head"><strong>Recent activity</strong><span class="dash-muted">Latest checks</span></div>
-                <div class="activity" id="activity-list"><div class="empty-state">No check events recorded yet.</div></div>
-              </div>
-            </aside>
-          </div>
-          <div class="preview-foot" id="data-source-note">Dashboard values appear here after monitors are configured and the first check completes.</div>
-        </div>
-      </section>
       <section class="section" id="features">
         <h2>Clear visibility into website health</h2>
         <p class="lead">The project is being designed around the essential signals that help developers understand whether a website is reachable and how it is responding.</p>
@@ -200,26 +178,68 @@
     const quickInput = document.getElementById("quick-check-url");
     const quickButton = document.getElementById("quick-check-button");
     const quickOutput = document.getElementById("quick-check-result");
-    function showQuickResult(title, message, type, url) {
+    function showQuickResult(title, message, type, url, details) {
       quickOutput.replaceChildren();
       quickOutput.className = "quick-result " + type;
-      const heading = document.createElement("strong"); heading.textContent = title;
-      const detail = document.createElement("span"); detail.textContent = message;
-      quickOutput.append(heading, detail);
-      if (url) { const link = document.createElement("a"); link.href = url.href; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = "Open website in a new tab"; quickOutput.append(document.createElement("br"), link); }
+      const heading = document.createElement("div"); heading.className = "result-heading";
+      const titleNode = document.createElement("strong"); titleNode.textContent = title;
+      const checked = document.createElement("span"); checked.className = "dash-muted"; checked.textContent = details?.checkedAt || "";
+      heading.append(titleNode, checked);
+      quickOutput.append(heading);
+      if (url) {
+        const address = document.createElement("div"); address.className = "result-url"; address.textContent = url.href;
+        quickOutput.append(address);
+      }
+      if (details) {
+        const grid = document.createElement("div"); grid.className = "result-grid";
+        const metrics = [
+          ["HTTP status", details.statusCode ? "HTTP " + details.statusCode : "Not exposed"],
+          ["Response / ping", Number.isFinite(details.responseTimeMs) ? details.responseTimeMs + " ms" : "Timed out"],
+          ["DNS records", details.addresses.length + " public IP" + (details.addresses.length === 1 ? "" : "s")],
+          ["HTTPS", details.https],
+          ["Domain", details.hostname],
+          ["Check type", "Browser HTTPS probe"]
+        ];
+        metrics.forEach(([label,value]) => {
+          const cell = document.createElement("div"); cell.className = "result-metric";
+          const caption = document.createElement("span"); caption.textContent = label;
+          const strong = document.createElement("b"); strong.textContent = value;
+          cell.append(caption,strong); grid.append(cell);
+        });
+        quickOutput.append(grid);
+        const ips = document.createElement("div"); ips.className = "result-detail"; ips.textContent = "Resolved IPs: " + details.addresses.join(", ");
+        quickOutput.append(ips);
+        const note = document.createElement("div"); note.className = "result-note";
+        note.textContent = "Response time is measured from this browser to the website (DNS lookup excluded); it is an HTTP response-time estimate, not ICMP ping. " + message;
+        quickOutput.append(note);
+      } else {
+        const detail = document.createElement("div"); detail.className = "result-detail"; detail.textContent = message;
+        quickOutput.append(detail);
+      }
+      if (url) {
+        const link = document.createElement("a"); link.href = url.href; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = "Open website in a new tab";
+        quickOutput.append(link);
+      }
       quickOutput.hidden = false;
     }
     quickForm.addEventListener("submit", async event => {
       event.preventDefault();
       quickButton.disabled = true; quickButton.textContent = "Checking…";
-      showQuickResult("Checking domain and HTTPS", "Resolving public DNS records and testing the HTTPS endpoint.", "checking");
+      showQuickResult("Checking your website", "Validating public DNS and testing HTTPS response time.", "checking");
       try {
         const checked = await window.PulseWatchProbe.validateAndProbe(quickInput.value);
         const result = checked.result;
-        const titles = { operational: "Operational · HTTPS responded", degraded: "Degraded · HTTP client error", down: "Server error · HTTP 5xx", reachable: "Reachable · HTTP status hidden", redirect: "HTTPS redirect detected", unreachable: "HTTPS endpoint unreachable" };
+        const titles = { operational: "Website is operational", degraded: "Website responded with a client error", down: "Website server error", reachable: "Website is reachable", redirect: "HTTPS redirect detected", unreachable: "Website could not be reached" };
         const types = { operational: "operational", degraded: "degraded", down: "down", reachable: "operational", redirect: "operational", unreachable: "error" };
-        const message = "Public DNS verified (" + checked.addresses.length + " IP record" + (checked.addresses.length === 1 ? "" : "s") + "). " + result.message + (result.statusCode ? " HTTP " + result.statusCode + "." : "");
-        showQuickResult(titles[result.kind] || "Check completed", message, types[result.kind] || "error", checked.url);
+        const details = {
+          statusCode: result.statusCode,
+          responseTimeMs: result.responseTimeMs,
+          addresses: checked.addresses,
+          https: result.kind === "unreachable" ? "Failed" : "Verified",
+          hostname: checked.url.hostname,
+          checkedAt: new Date().toLocaleString()
+        };
+        showQuickResult(titles[result.kind] || "Check completed", result.message, types[result.kind] || "error", checked.url, details);
       } catch (error) {
         showQuickResult("Could not verify this website", error.message || "The URL failed validation.", "error");
       } finally {
