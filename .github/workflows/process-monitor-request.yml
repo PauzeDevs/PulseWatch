@@ -1,0 +1,134 @@
+name: Process monitor requests
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  add-monitor:
+    if: startsWith(github.event.issue.title, '[Monitor request]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate request and update monitors.json
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || "";
+            const getSection = (heading) => {
+              const start = body.indexOf("### " + heading);
+              if (start < 0) return "";
+              const valueStart = body.indexOf("\n", start) + 1;
+              const next = body.indexOf("\n### ", valueStart);
+              return body.slice(valueStart, next < 0 ? body.length : next)
+                .replace(/<!--[\s\S]*?-->/g, "").trim();
+            };
+            const name = getSection("Website name");
+            const rawUrl = getSection("Website URL");
+            const reason = getSection("Why should this website be monitored?");
+            const fail = async (message) => {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: issue.number,
+                body: "PulseWatch could not add this request automatically: " + message +
+                  "\n\nEdit this issue with a valid public HTTPS URL and website name."
+              });
+              await github.rest.issues.addLabels({
+                ...context.repo, issue_number: issue.number, labels: ["needs-review"]
+              }).catch(() => {});
+            };
+
+            if (!name || !rawUrl) {
+              await fail("the website name or URL is missing from the issue body.");
+              return;
+            }
+
+            let url;
+            try { url = new URL(rawUrl); }
+            catch { await fail("the URL is invalid."); return; }
+
+            const host = url.hostname.toLowerCase();
+            if (url.protocol !== "https:" || url.username || url.password ||
+                (url.port && url.port !== "443") || !host.includes(".") ||
+                host === "localhost" || host.endsWith(".local") ||
+                host.endsWith(".internal") || host.startsWith("[") ||
+                /^\d+(?:\.\d+){3}$/.test(host)) {
+              await fail("only public HTTPS domain URLs on port 443 are accepted.");
+              return;
+            }
+
+            const dnsResponse = await fetch(
+              "https://dns.google/resolve?name=" + encodeURIComponent(host) + "&type=A",
+              { headers: { accept: "application/dns-json" }, signal: AbortSignal.timeout(7000) }
+            );
+            if (!dnsResponse.ok) { await fail("public DNS validation failed."); return; }
+            const dns = await dnsResponse.json();
+            const ips = (dns.Answer || []).filter(record => record.type === 1).map(record => record.data);
+            const isPrivate = (ip) => {
+              const octets = ip.split(".").map(Number);
+              if (octets.length !== 4 || octets.some(n => !Number.isInteger(n) || n < 0 || n > 255)) return true;
+              const [a,b,c] = octets;
+              return a === 0 || a === 10 || a === 127 || a >= 224 ||
+                (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) ||
+                (a === 192 && (b === 0 || b === 168)) || (a === 100 && b >= 64 && b <= 127) ||
+                (a === 198 && (b === 18 || b === 19 || (b === 51 && c === 100))) ||
+                (a === 203 && b === 0 && c === 113);
+            };
+            if (!ips.length || ips.some(isPrivate)) {
+              await fail("the domain has no verified public IPv4 address.");
+              return;
+            }
+
+            const { data: file } = await github.rest.repos.getContent({
+              ...context.repo, path: "monitors.json", ref: "main"
+            });
+            const config = JSON.parse(Buffer.from(file.content, "base64").toString("utf8"));
+            if (config.monitors.some(item => {
+              try { return new URL(item.url).hostname.toLowerCase() === host; }
+              catch { return false; }
+            })) {
+              await github.rest.issues.createComment({
+                ...context.repo, issue_number: issue.number,
+                body: "This domain is already present in `monitors.json`."
+              });
+              await github.rest.issues.addLabels({
+                ...context.repo, issue_number: issue.number, labels: ["duplicate"]
+              }).catch(() => {});
+              return;
+            }
+
+            const base = host.replace(/^www\./, "").split(".")[0]
+              .replace(/[^a-z0-9-]/g, "-").replace(/^-+|-+$/g, "").slice(0, 30) || "website";
+            let id = base, suffix = 2;
+            while (config.monitors.some(item => item.id === id)) id = base + "-" + suffix++;
+            config.monitors.push({
+              id,
+              name: name.slice(0, 80),
+              url: url.origin + url.pathname + url.search
+            });
+
+            await github.rest.repos.createOrUpdateFileContents({
+              ...context.repo,
+              path: "monitors.json",
+              message: "(monitor): add " + name.slice(0, 60),
+              content: Buffer.from(JSON.stringify(config, null, 2) + "\n").toString("base64"),
+              sha: file.sha,
+              branch: "main"
+            });
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: issue.number,
+              body: "Added **" + name.replace(/[\r\n]/g, " ") +
+                "** to `monitors.json`. It will be checked in the next scheduled cycle.\n\nReason: " +
+                (reason || "Not provided")
+            });
+            await github.rest.issues.addLabels({
+              ...context.repo, issue_number: issue.number, labels: ["monitor-added"]
+            }).catch(() => {});
+            await github.rest.issues.update({
+              ...context.repo, issue_number: issue.number, state: "closed"
+            });
