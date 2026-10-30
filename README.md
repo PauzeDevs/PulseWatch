@@ -5,9 +5,15 @@ A lightweight website monitoring project by **PauzeX Developments**, focused on 
 ## Website
 https://pauzedevs.github.io/PulseWatch/
 
+## Quick check and scroll motion
+
+The homepage includes a one-time HTTPS quick check. It validates a public DNS address and then tries to reach the supplied HTTPS URL from the visitor's browser. Some sites block browser access to HTTP status codes with CORS; when that happens the tool reports reachability without inventing an HTTP code. A quick check does not add a permanent monitor.
+
+The homepage and request page use IntersectionObserver reveal effects with transform/opacity transitions and reduced-motion support. Smoothness depends on the visitor's device and browser; no page can guarantee a fixed 60 FPS on every device.
+
 ## Community monitor requests
 
-Visitors can suggest a public website at [Add a website](https://pauzedevs.github.io/PulseWatch/add.html). The form opens a pre-filled GitHub issue. Requests are reviewed by maintainers before being added to `monitors.json`; submissions do not automatically trigger network checks. This review step prevents arbitrary public input from being executed directly by the monitoring runner.
+Visitors can suggest a public website at [Add a website](https://pauzedevs.github.io/PulseWatch/add.html). The form first requires HTTPS, a public A/AAAA DNS record, and a successful browser HTTPS connection (the exact HTTP status may be hidden by CORS). It then opens a pre-filled GitHub issue. Requests are reviewed by maintainers before being added to `monitors.json`; submissions do not automatically trigger network checks.
 
 ## Monitoring engine
 
