@@ -5,6 +5,7 @@
     ".top, .hero, .quick-check, .section, .card, .footer"
   ));
   if (!targets.length) return;
+  targets.forEach(element => element.classList.add("reveal"));
 
   // Content remains visible even if IntersectionObserver is unavailable or fails.
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
