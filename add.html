@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0593C6">
+  <title>Add a website — PulseWatch</title>
+  <meta name="description" content="Suggest a public website for PulseWatch uptime monitoring. Requests are reviewed before they are added.">
+  <link rel="canonical" href="https://pauzedevs.github.io/PulseWatch/add.html">
+  <meta name="robots" content="index, follow">
+  <style>
+    :root{color-scheme:dark;--blue:#0593C6;--pink:#D83995;--white:#FCFFFF;--muted:rgba(252,255,255,.72)}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% 12%,rgba(5,147,198,.42),transparent 38%),radial-gradient(ellipse at 88% 35%,rgba(216,57,149,.3),transparent 40%),linear-gradient(145deg,#06121c,#0b1b2b 50%,#171326);color:var(--white);font:16px/1.65 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+    .wrap{width:min(760px,calc(100% - 32px));margin:auto}.top{display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-bottom:1px solid rgba(252,255,255,.12)}a{color:inherit}.brand{font-weight:850;font-size:1.3rem;letter-spacing:-.05em;text-decoration:none}.brand span{color:var(--blue)}.back{color:var(--muted);text-decoration:none;font-size:.9rem}
+    main{padding:70px 0}.eyebrow{display:inline-block;border:1px solid rgba(252,255,255,.2);border-radius:99px;padding:5px 12px;background:rgba(5,147,198,.13);font-size:.8rem;color:#dff8ff}
+    h1{font-size:clamp(2.4rem,7vw,4rem);line-height:1.04;letter-spacing:-.06em;margin:20px 0 12px}h1 span{background:linear-gradient(100deg,var(--blue),var(--white),var(--pink));background-clip:text;-webkit-background-clip:text;color:transparent}
+    .lead{color:var(--muted);max-width:620px}.panel{margin-top:30px;padding:26px;border:1px solid rgba(252,255,255,.2);border-radius:22px;background:linear-gradient(140deg,rgba(5,147,198,.18),rgba(252,255,255,.06) 55%,rgba(216,57,149,.13));backdrop-filter:blur(18px)}
+    label{display:block;font-size:.88rem;font-weight:650;margin:17px 0 7px}input,textarea{width:100%;padding:13px 14px;border:1px solid rgba(252,255,255,.22);border-radius:12px;background:rgba(4,14,24,.58);color:var(--white);font:inherit;outline:none}input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(5,147,198,.15)}textarea{min-height:90px;resize:vertical}
+    .hint,.notice{font-size:.8rem;color:var(--muted)}.notice{padding:13px 15px;border-left:3px solid var(--pink);border-radius:0 10px 10px 0;background:rgba(216,57,149,.1);margin:18px 0}
+    button{border:0;border-radius:12px;padding:13px 18px;background:linear-gradient(110deg,var(--blue),var(--pink));color:white;font:inherit;font-weight:750;cursor:pointer;margin-top:20px}button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+    .fine{font-size:.76rem;color:var(--muted);margin-top:14px}.footer{border-top:1px solid rgba(252,255,255,.12);padding:22px 0 35px;color:var(--muted);font-size:.82rem}
+    @media(max-width:600px){main{padding:48px 0}.panel{padding:19px}.top{gap:12px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top"><a class="brand" href="./">pulse<span>watch</span></a><a class="back" href="./">← Back to dashboard</a></header>
+    <main>
+      <span class="eyebrow">Community monitor requests</span>
+      <h1>Put a website <span>on the radar.</span></h1>
+      <p class="lead">Suggest a public website for PulseWatch to monitor. Requests go to GitHub for review; approved sites are added to the scheduled checks and appear on the public dashboard.</p>
+      <form class="panel" id="request-form">
+        <label for="site-name">Website or service name</label>
+        <input id="site-name" name="name" maxlength="80" placeholder="e.g. My portfolio" required>
+        <label for="site-url">Website URL</label>
+        <input id="site-url" name="url" type="url" maxlength="2048" placeholder="https://example.com" required>
+        <label for="reason">Why should we monitor it? <span class="hint">(optional)</span></label>
+        <textarea id="reason" name="reason" maxlength="500" placeholder="Tell us briefly why this website would be useful to track."></textarea>
+        <p class="notice">Requests are reviewed by the PulseWatch maintainers before monitoring begins. Do not submit private dashboards, internal network addresses, login-only pages, or URLs containing passwords, API keys, or other secrets.</p>
+        <button type="submit">Continue to GitHub request</button>
+        <p class="fine">GitHub account sign-in may be required to submit the request. Submitting a request does not guarantee acceptance.</p>
+      </form>
+    </main>
+    <footer class="footer">© 2026 PauzeX Developments · PulseWatch</footer>
+  </div>
+  <script>
+    document.getElementById("request-form").addEventListener("submit", event => {
+      event.preventDefault();
+      const name = document.getElementById("site-name").value.trim();
+      const rawUrl = document.getElementById("site-url").value.trim();
+      const reason = document.getElementById("reason").value.trim();
+      let parsed;
+      try { parsed = new URL(rawUrl); } catch { alert("Enter a valid website URL."); return; }
+      if (!["http:","https:"].includes(parsed.protocol) || parsed.username || parsed.password || !parsed.hostname.includes(".")) {
+        alert("Use a public HTTP or HTTPS website URL without embedded credentials."); return;
+      }
+      const title = "[Monitor request] " + name;
+      const body = "### Website name\n" + name + "\n\n### Website URL\n" + parsed.href + "\n\n### Why should this website be monitored?\n" + (reason || "Not provided") + "\n";
+      const target = "https://github.com/PauzeDevs/PulseWatch/issues/new?title=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(body) + "&labels=monitor-request";
+      window.location.href = target;
+    });
+  </script>
+</body>
+</html>
