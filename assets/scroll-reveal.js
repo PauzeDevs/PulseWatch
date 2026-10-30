@@ -5,7 +5,7 @@
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduceMotion || !("IntersectionObserver" in window)) return;
 
-  const targets = Array.from(document.querySelectorAll(".top, .hero, .preview, .section, .card, .panel, .footer, main > .eyebrow, main > h1, main > .lead"));
+  const targets = Array.from(document.querySelectorAll(".top, .hero, .quick-check, .preview, .section, .card, .panel, .footer, main > .eyebrow, main > h1, main > .lead"));
   if (!targets.length) return;
 
   root.classList.add("motion-ready");
