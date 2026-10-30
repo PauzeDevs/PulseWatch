@@ -55,7 +55,7 @@
       const response = await fetch(url, {
         headers: { accept: "application/dns-json" },
         cache: "no-store",
-        signal: AbortSignal.timeout(7000)
+        signal: AbortSignal.timeout(5000)
       });
       if (!response.ok) throw new Error("The public DNS resolver could not validate this domain.");
       return response.json();
@@ -80,7 +80,7 @@
       redirect: "manual",
       cache: "no-store",
       headers: { range: "bytes=0-0" },
-      signal: AbortSignal.timeout(9000)
+      signal: AbortSignal.timeout(6000)
     };
     const startedAt = performance.now();
     try {
@@ -94,6 +94,12 @@
       if (response.status >= 400) return { kind: "degraded", statusCode: response.status, responseTimeMs, message: "The server returned an HTTP 4xx response." };
       return { kind: "operational", statusCode: response.status, responseTimeMs, message: "HTTPS request completed successfully." };
     } catch (corsOrNetworkError) {
+      if (corsOrNetworkError?.name === "AbortError" || corsOrNetworkError?.name === "TimeoutError") {
+        return { kind: "unreachable", statusCode: null, responseTimeMs: Math.round(performance.now() - startedAt), message: "The HTTPS request timed out." };
+      }
+      if (!(corsOrNetworkError instanceof TypeError)) {
+        return { kind: "unreachable", statusCode: null, responseTimeMs: Math.round(performance.now() - startedAt), message: "The HTTPS endpoint could not be reached." };
+      }
       try {
         const opaqueStartedAt = performance.now();
         const opaque = await fetch(url, {
