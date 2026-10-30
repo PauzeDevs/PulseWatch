@@ -1,4 +1,69 @@
 {
   "schemaVersion": 1,
-  "monitors": {}
+  "monitors": {
+    "apple": [
+      {
+        "checkedAt": "2026-10-30T07:15:02.427Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 213
+      }
+    ],
+    "microsoft": [
+      {
+        "checkedAt": "2026-10-30T07:15:02.516Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 245
+      }
+    ],
+    "google": [
+      {
+        "checkedAt": "2026-10-30T07:15:02.431Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 158
+      }
+    ],
+    "github": [
+      {
+        "checkedAt": "2026-10-30T07:15:02.419Z",
+        "status": "operational",
+        "statusCode": 206,
+        "responseTimeMs": 142
+      }
+    ],
+    "cloudflare": [
+      {
+        "checkedAt": "2026-10-30T07:15:02.457Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 181
+      }
+    ],
+    "amazon": [
+      {
+        "checkedAt": "2026-10-30T07:15:02.510Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 233
+      }
+    ],
+    "wikipedia": [
+      {
+        "checkedAt": "2026-10-30T07:15:02.437Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 160
+      }
+    ],
+    "youtube": [
+      {
+        "checkedAt": "2026-10-30T07:15:02.539Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 260
+      }
+    ]
+  }
 }

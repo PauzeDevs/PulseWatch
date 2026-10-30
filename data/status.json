@@ -1,5 +1,102 @@
 {
   "schemaVersion": 1,
-  "checkedAt": null,
-  "monitors": []
+  "checkedAt": "2026-10-30T07:15:02.213Z",
+  "monitors": [
+    {
+      "id": "apple",
+      "name": "Apple",
+      "url": "https://www.apple.com/",
+      "status": "operational",
+      "statusCode": 200,
+      "responseTimeMs": 213,
+      "checkedAt": "2026-10-30T07:15:02.427Z",
+      "error": null,
+      "uptimePercent": 100,
+      "samples": 1
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft",
+      "url": "https://www.microsoft.com/",
+      "status": "operational",
+      "statusCode": 200,
+      "responseTimeMs": 245,
+      "checkedAt": "2026-10-30T07:15:02.516Z",
+      "error": null,
+      "uptimePercent": 100,
+      "samples": 1
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "url": "https://www.google.com/",
+      "status": "operational",
+      "statusCode": 200,
+      "responseTimeMs": 158,
+      "checkedAt": "2026-10-30T07:15:02.431Z",
+      "error": null,
+      "uptimePercent": 100,
+      "samples": 1
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "url": "https://github.com/",
+      "status": "operational",
+      "statusCode": 206,
+      "responseTimeMs": 142,
+      "checkedAt": "2026-10-30T07:15:02.419Z",
+      "error": null,
+      "uptimePercent": 100,
+      "samples": 1
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare",
+      "url": "https://www.cloudflare.com/",
+      "status": "operational",
+      "statusCode": 200,
+      "responseTimeMs": 181,
+      "checkedAt": "2026-10-30T07:15:02.457Z",
+      "error": null,
+      "uptimePercent": 100,
+      "samples": 1
+    },
+    {
+      "id": "amazon",
+      "name": "Amazon",
+      "url": "https://www.amazon.com/",
+      "status": "operational",
+      "statusCode": 200,
+      "responseTimeMs": 233,
+      "checkedAt": "2026-10-30T07:15:02.510Z",
+      "error": null,
+      "uptimePercent": 100,
+      "samples": 1
+    },
+    {
+      "id": "wikipedia",
+      "name": "Wikipedia",
+      "url": "https://www.wikipedia.org/",
+      "status": "operational",
+      "statusCode": 200,
+      "responseTimeMs": 160,
+      "checkedAt": "2026-10-30T07:15:02.437Z",
+      "error": null,
+      "uptimePercent": 100,
+      "samples": 1
+    },
+    {
+      "id": "youtube",
+      "name": "YouTube",
+      "url": "https://www.youtube.com/",
+      "status": "operational",
+      "statusCode": 200,
+      "responseTimeMs": 260,
+      "checkedAt": "2026-10-30T07:15:02.539Z",
+      "error": null,
+      "uptimePercent": 100,
+      "samples": 1
+    }
+  ]
 }
