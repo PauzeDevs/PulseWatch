@@ -1,7 +1,16 @@
 {
   "checks": {
-    "timeoutMs": 10000,
+    "timeoutMs": 12000,
     "historyLimit": 288
   },
-  "monitors": []
+  "monitors": [
+    { "id": "apple", "name": "Apple", "url": "https://www.apple.com/" },
+    { "id": "microsoft", "name": "Microsoft", "url": "https://www.microsoft.com/" },
+    { "id": "google", "name": "Google", "url": "https://www.google.com/" },
+    { "id": "github", "name": "GitHub", "url": "https://github.com/" },
+    { "id": "cloudflare", "name": "Cloudflare", "url": "https://www.cloudflare.com/" },
+    { "id": "amazon", "name": "Amazon", "url": "https://www.amazon.com/" },
+    { "id": "wikipedia", "name": "Wikipedia", "url": "https://www.wikipedia.org/" },
+    { "id": "youtube", "name": "YouTube", "url": "https://www.youtube.com/" }
+  ]
 }
