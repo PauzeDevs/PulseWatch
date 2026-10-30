@@ -24,7 +24,7 @@ PulseWatch uses GitHub Actions as a scheduled worker and JSON files as its stora
 - Classifies results as **Operational** (2xx/3xx), **Degraded** (4xx), or **Down** (5xx, network errors, or timeouts).
 - Retains up to 288 samples per monitor by default (24 hours at five-minute intervals).
 - Publishes status data to `data/status.json` and history to `data/history.json`.
-- The public dashboard reads these JSON files and refreshes every 60 seconds.
+- The monitor workflow publishes the JSON files with the site. The current homepage is a one-time URL diagnostic tool; it does not display the full monitor directory.
 
 ### Add websites to monitor
 
@@ -78,4 +78,4 @@ For Google Search Console, add and verify `https://pauzedevs.github.io/PulseWatc
 
 ## Project status
 
-The automated checker and live JSON dashboard are implemented. The initial monitor list includes Apple, Microsoft, Google, GitHub, Cloudflare, Amazon, Wikipedia, and YouTube. Community requests are reviewed before acceptance.
+The automated checker and per-URL browser diagnostic are implemented. The scheduled monitor data is retained as JSON for monitoring history and maintenance; the homepage does not currently expose a public all-sites dashboard. The initial monitor configuration includes Apple, Microsoft, Google, GitHub, Cloudflare, Amazon, Wikipedia, and YouTube. Community requests are reviewed before acceptance.
