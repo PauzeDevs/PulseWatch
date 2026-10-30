@@ -13,7 +13,7 @@ The homepage and request page use IntersectionObserver reveal effects with trans
 
 ## Community monitor requests
 
-Visitors can suggest a public website at [Add a website](https://pauzedevs.github.io/PulseWatch/add.html). The form first requires HTTPS, a public A/AAAA DNS record, and a successful browser HTTPS connection (the exact HTTP status may be hidden by CORS). It then opens a pre-filled GitHub issue. Requests are reviewed by maintainers before being added to `monitors.json`; submissions do not automatically trigger network checks.
+Visitors can suggest a public website at [Add a website](https://pauzedevs.github.io/PulseWatch/add.html). The form first requires HTTPS, a public A/AAAA DNS record, and a successful browser HTTPS connection (the exact HTTP status may be hidden by CORS). It then opens a pre-filled GitHub issue. A GitHub Actions issue workflow parses the submitted name, URL and reason, validates public DNS and HTTPS, rejects duplicates, and commits valid requests into `monitors.json`. The monitor worker then checks newly added sites on its next run.
 
 ## Monitoring engine
 
@@ -24,7 +24,7 @@ PulseWatch uses GitHub Actions as a scheduled worker and JSON files as its stora
 - Classifies results as **Operational** (2xx/3xx), **Degraded** (4xx), or **Down** (5xx, network errors, or timeouts).
 - Retains up to 288 samples per monitor by default (24 hours at five-minute intervals).
 - Publishes status data to `data/status.json` and history to `data/history.json`.
-- The monitor workflow publishes the JSON files with the site. The current homepage is a one-time URL diagnostic tool; it does not display the full monitor directory.
+- The monitor workflow publishes the JSON files with the site. The public [Monitored websites directory](https://pauzedevs.github.io/PulseWatch/status.html) lists configured websites; selecting one opens its current status, recorded uptime estimate, response time and recent check history.
 
 ### Add websites to monitor
 
@@ -78,4 +78,4 @@ For Google Search Console, add and verify `https://pauzedevs.github.io/PulseWatc
 
 ## Project status
 
-The automated checker and per-URL browser diagnostic are implemented. The scheduled monitor data is retained as JSON for monitoring history and maintenance; the homepage does not currently expose a public all-sites dashboard. The initial monitor configuration includes Apple, Microsoft, Google, GitHub, Cloudflare, Amazon, Wikipedia, and YouTube. Community requests are reviewed before acceptance.
+The automated checker, per-URL browser diagnostic, public monitored-sites directory and individual status views are implemented. The initial monitor configuration includes Apple, Microsoft, Google, GitHub, Cloudflare, Amazon, Wikipedia, YouTube and approved community submissions.
