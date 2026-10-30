@@ -5,22 +5,67 @@ A lightweight website monitoring project by **PauzeX Developments**, focused on 
 ## Website
 https://pauzedevs.github.io/PulseWatch/
 
-## Search engine files
+## Monitoring engine
+
+PulseWatch uses GitHub Actions as a scheduled worker and JSON files as its storage layer. No external database or paid monitoring service is required.
+
+- Checks configured HTTP/HTTPS websites every five minutes.
+- Records HTTP status, response time, check timestamp, and current state.
+- Classifies results as **Operational** (2xx/3xx), **Degraded** (4xx), or **Down** (5xx, network errors, or timeouts).
+- Retains up to 288 samples per monitor by default (24 hours at five-minute intervals).
+- Publishes status data to `data/status.json` and history to `data/history.json`.
+- The public dashboard reads these JSON files and refreshes every 60 seconds.
+
+### Add websites to monitor
+
+Edit [`monitors.json`](./monitors.json) and add entries to the `monitors` array:
+
+```json
+{
+  "checks": {
+    "timeoutMs": 10000,
+    "historyLimit": 288
+  },
+  "monitors": [
+    {
+      "id": "my-website",
+      "name": "My Website",
+      "url": "https://example.com"
+    }
+  ]
+}
+```
+
+Use a unique lowercase ID containing letters, numbers, and hyphens. Only public HTTP and HTTPS URLs should be configured. After the change is committed, the monitor workflow can be started manually from **Actions → PulseWatch Monitor → Run workflow**; otherwise it runs on its five-minute schedule.
+
+### Data and limitations
+
+- The first check creates the initial measurements; uptime percentages are calculated from recorded samples, not claimed as historical uptime before monitoring began.
+- The 288-sample window represents approximately 24 hours of checks.
+- GitHub Actions schedules are best-effort and may be delayed. This is not a contractual uptime SLA.
+- The monitor worker stores data by committing JSON updates to this repository. Avoid adding private endpoints, credentials, or URLs containing access tokens.
+- The current checker uses HTTP GET requests with a small Range header; some servers may ignore the range and return a normal response.
+
+## Local development
+
+Requires Node.js 22 or later.
+
+```bash
+node --test
+node scripts/check.mjs
+```
+
+## GitHub Pages and Search Console
+
+The Pages workflow deploys the repository root to GitHub Pages when site or monitoring data changes.
+
 - [robots.txt](https://pauzedevs.github.io/PulseWatch/robots.txt)
 - [sitemap.xml](https://pauzedevs.github.io/PulseWatch/sitemap.xml)
 
-## GitHub Pages
-The repository includes a GitHub Actions workflow that deploys the root directory to GitHub Pages when changes are pushed to `main`.
+In **Settings → Pages**, set the build and deployment source to **GitHub Actions**.
 
-In **Settings → Pages**, set the build and deployment source to **GitHub Actions** if it is not already selected.
-
-## Search Console
-After GitHub Pages is live:
-1. Add and verify `https://pauzedevs.github.io/PulseWatch/` in Google Search Console (URL-prefix property).
-2. Submit `sitemap.xml`.
-3. Use URL Inspection to test the homepage and request indexing.
-
-Submitting a sitemap does not guarantee indexing. Google decides whether and when to index pages.
+For Google Search Console, add and verify `https://pauzedevs.github.io/PulseWatch/` as a URL-prefix property, submit `sitemap.xml`, and inspect the homepage. Sitemap submission does not guarantee indexing.
 
 ## Project status
-This repository currently contains the public landing page and SEO/deployment foundation. Live monitoring features are not yet implemented.
+
+The automated checker and live JSON dashboard are implemented. Add your target websites to `monitors.json` to begin collecting real results.
