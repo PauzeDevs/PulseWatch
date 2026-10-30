@@ -25,7 +25,7 @@
     if (ip.startsWith("fc") || ip.startsWith("fd") || ip.startsWith("fe8") ||
         ip.startsWith("fe9") || ip.startsWith("fea") || ip.startsWith("feb") ||
         ip.startsWith("ff") || ip.startsWith("2001:db8") ||
-        ip.startsWith("2001:0000") || ip.startsWith("2001:0010") ||
+        ip.startsWith("2001:0:") || ip.startsWith("2001:0010") ||
         ip.startsWith("2001:0020") || ip.startsWith("2002:") ||
         ip.startsWith("3fff:")) return false;
     return /^[23]/.test(ip);
