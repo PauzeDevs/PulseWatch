@@ -88,6 +88,25 @@
     .activity-item .activity-icon.degraded{background:rgba(243,198,107,.15);color:#f3c66b}
     .activity-item .activity-icon.down{background:rgba(216,57,149,.18);color:#ffc3e4}
 
+
+    .quick-check{margin:0 0 30px;padding:26px;border:1px solid rgba(252,255,255,.2);border-radius:20px;background:linear-gradient(125deg,rgba(5,147,198,.2),rgba(252,255,255,.055) 55%,rgba(216,57,149,.16));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .quick-check h2{font-size:clamp(1.5rem,3.5vw,2rem);letter-spacing:-.04em;margin:0 0 7px}
+    .quick-check p{color:var(--muted);margin:0 0 16px;font-size:.9rem}
+    .quick-form{display:flex;gap:10px;align-items:stretch}
+    .quick-form input{flex:1;min-width:0;padding:13px 15px;border-radius:12px;border:1px solid rgba(252,255,255,.22);background:rgba(4,14,24,.58);color:var(--text);font:inherit;outline:none}
+    .quick-form input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(5,147,198,.15)}
+    .quick-form button{padding:12px 17px;border:0;border-radius:12px;background:linear-gradient(110deg,var(--blue),var(--pink));color:white;font:inherit;font-weight:750;cursor:pointer;white-space:nowrap}
+    .quick-form button:disabled{opacity:.65;cursor:wait}
+    .quick-result{margin-top:15px;padding:14px 16px;border:1px solid rgba(252,255,255,.17);border-radius:13px;background:rgba(4,14,24,.4);font-size:.88rem}
+    .quick-result[hidden]{display:none}.quick-result strong{display:block;margin-bottom:4px}.quick-result.operational{border-color:rgba(5,147,198,.55)}.quick-result.degraded{border-color:rgba(243,198,107,.5)}.quick-result.down,.quick-result.error{border-color:rgba(216,57,149,.55)}
+    .quick-result a{display:inline-block;margin-top:7px;color:#dff8ff;text-decoration:underline;text-underline-offset:3px}
+    .quick-footnote{font-size:.75rem!important;margin-top:10px!important;margin-bottom:0!important}
+    .motion-ready .reveal{opacity:0;transform:translate3d(0,24px,0);transition:opacity .62s cubic-bezier(.2,.7,.2,1),transform .62s cubic-bezier(.2,.7,.2,1);transition-delay:var(--reveal-delay,0ms);will-change:transform,opacity}
+    .motion-ready .reveal.is-visible{opacity:1;transform:translate3d(0,0,0);will-change:auto}
+    @media(max-width:650px){.quick-form{flex-direction:column}.quick-form button{width:100%}.quick-check{padding:20px}}
+    @media(prefers-reduced-motion:reduce){.motion-ready .reveal,.motion-ready .reveal.is-visible{opacity:1;transform:none;transition:none;will-change:auto}}
+
   </style>
   <script type="application/ld+json">
   {
@@ -104,7 +123,7 @@
   <div class="wrap">
     <header class="top">
       <a class="brand" href="./" aria-label="PulseWatch home">pulse<span>watch</span></a>
-      <nav aria-label="Main navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="add.html">Add a website</a><a href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
+      <nav aria-label="Main navigation"><a href="#quick-check">Quick check</a><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="add.html">Add a website</a><a href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
     </header>
     <main>
       <section class="hero">
@@ -112,6 +131,17 @@
         <h1>Know when your website is <span>up.</span></h1>
         <p>PulseWatch is a lightweight website monitoring project focused on availability checks, response-time visibility, and a readable history of service incidents.</p>
         <div class="actions"><a class="btn primary" href="https://github.com/PauzeDevs/PulseWatch" target="_blank" rel="noopener noreferrer">Explore the project</a><a class="btn secondary" href="#features">Explore features</a></div>
+      </section>
+      <section class="quick-check reveal" id="quick-check" aria-labelledby="quick-check-title">
+        <h2 id="quick-check-title">Check a website instantly</h2>
+        <p>Enter a public HTTPS address to verify its DNS and test its HTTPS connection. Results appear here without adding it to the monitor list.</p>
+        <form class="quick-form" id="quick-check-form">
+          <label for="quick-check-url" class="sr-only">Website HTTPS URL</label>
+          <input id="quick-check-url" name="url" type="url" inputmode="url" autocomplete="url" placeholder="https://example.com" required>
+          <button type="submit" id="quick-check-button">Run quick check</button>
+        </form>
+        <div class="quick-result" id="quick-check-result" role="status" aria-live="polite" hidden></div>
+        <p class="quick-footnote">Quick checks are one-time browser tests, not continuous monitoring. Some sites hide HTTP status codes from browsers through CORS; PulseWatch will show that limitation rather than guess.</p>
       </section>
       <section class="preview" aria-label="PulseWatch live monitoring dashboard">
         <div class="dashboard">
@@ -166,6 +196,36 @@
   </div>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+    const quickForm = document.getElementById("quick-check-form");
+    const quickInput = document.getElementById("quick-check-url");
+    const quickButton = document.getElementById("quick-check-button");
+    const quickOutput = document.getElementById("quick-check-result");
+    function showQuickResult(title, message, type, url) {
+      quickOutput.replaceChildren();
+      quickOutput.className = "quick-result " + type;
+      const heading = document.createElement("strong"); heading.textContent = title;
+      const detail = document.createElement("span"); detail.textContent = message;
+      quickOutput.append(heading, detail);
+      if (url) { const link = document.createElement("a"); link.href = url.href; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = "Open website in a new tab"; quickOutput.append(document.createElement("br"), link); }
+      quickOutput.hidden = false;
+    }
+    quickForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      quickButton.disabled = true; quickButton.textContent = "Checking…";
+      showQuickResult("Checking domain and HTTPS", "Resolving public DNS records and testing the HTTPS endpoint.", "checking");
+      try {
+        const checked = await window.PulseWatchProbe.validateAndProbe(quickInput.value);
+        const result = checked.result;
+        const titles = { operational: "Operational · HTTPS responded", degraded: "Degraded · HTTP client error", down: "Server error · HTTP 5xx", reachable: "Reachable · HTTP status hidden", redirect: "HTTPS redirect detected", unreachable: "HTTPS endpoint unreachable" };
+        const types = { operational: "operational", degraded: "degraded", down: "down", reachable: "operational", redirect: "operational", unreachable: "error" };
+        const message = "Public DNS verified (" + checked.addresses.length + " IP record" + (checked.addresses.length === 1 ? "" : "s") + "). " + result.message + (result.statusCode ? " HTTP " + result.statusCode + "." : "");
+        showQuickResult(titles[result.kind] || "Check completed", message, types[result.kind] || "error", checked.url);
+      } catch (error) {
+        showQuickResult("Could not verify this website", error.message || "The URL failed validation.", "error");
+      } finally {
+        quickButton.disabled = false; quickButton.textContent = "Run quick check";
+      }
+    });
     const statusUrl = new URL("data/status.json", document.baseURI);
     const historyUrl = new URL("data/history.json", document.baseURI);
     const byId = id => document.getElementById(id);
@@ -277,5 +337,7 @@
     loadDashboard();
     window.setInterval(loadDashboard,60000);
   </script>
+  <script src="assets/site-probe.js"></script>
+  <script src="assets/scroll-reveal.js"></script>
 </body>
 </html>
