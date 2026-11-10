@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-11-10T07:40:26.566Z",
+  "checkedAt": "2026-11-10T15:48:52.964Z",
   "monitors": [
     {
       "id": "apple",
@@ -8,11 +8,11 @@
       "url": "https://www.apple.com/",
       "status": "operational",
       "statusCode": 200,
-      "responseTimeMs": 100,
-      "checkedAt": "2026-11-10T07:40:26.668Z",
+      "responseTimeMs": 148,
+      "checkedAt": "2026-11-10T15:48:53.114Z",
       "error": null,
       "uptimePercent": 100,
-      "samples": 47
+      "samples": 48
     },
     {
       "id": "microsoft",
@@ -20,11 +20,11 @@
       "url": "https://www.microsoft.com/",
       "status": "operational",
       "statusCode": 200,
-      "responseTimeMs": 165,
-      "checkedAt": "2026-11-10T07:40:26.771Z",
+      "responseTimeMs": 352,
+      "checkedAt": "2026-11-10T15:48:53.341Z",
       "error": null,
       "uptimePercent": 100,
-      "samples": 47
+      "samples": 48
     },
     {
       "id": "google",
@@ -32,11 +32,11 @@
       "url": "https://www.google.com/",
       "status": "operational",
       "statusCode": 200,
-      "responseTimeMs": 86,
-      "checkedAt": "2026-11-10T07:40:26.693Z",
+      "responseTimeMs": 201,
+      "checkedAt": "2026-11-10T15:48:53.190Z",
       "error": null,
       "uptimePercent": 100,
-      "samples": 47
+      "samples": 48
     },
     {
       "id": "github",
@@ -44,11 +44,11 @@
       "url": "https://github.com/",
       "status": "operational",
       "statusCode": 206,
-      "responseTimeMs": 53,
-      "checkedAt": "2026-11-10T07:40:26.662Z",
+      "responseTimeMs": 127,
+      "checkedAt": "2026-11-10T15:48:53.117Z",
       "error": null,
       "uptimePercent": 100,
-      "samples": 47
+      "samples": 48
     },
     {
       "id": "cloudflare",
@@ -56,11 +56,11 @@
       "url": "https://www.cloudflare.com/",
       "status": "operational",
       "statusCode": 200,
-      "responseTimeMs": 89,
-      "checkedAt": "2026-11-10T07:40:26.697Z",
+      "responseTimeMs": 180,
+      "checkedAt": "2026-11-10T15:48:53.171Z",
       "error": null,
-      "uptimePercent": 97.87,
-      "samples": 47
+      "uptimePercent": 97.92,
+      "samples": 48
     },
     {
       "id": "amazon",
@@ -68,11 +68,11 @@
       "url": "https://www.amazon.com/",
       "status": "operational",
       "statusCode": 200,
-      "responseTimeMs": 136,
-      "checkedAt": "2026-11-10T07:40:26.746Z",
+      "responseTimeMs": 211,
+      "checkedAt": "2026-11-10T15:48:53.203Z",
       "error": null,
       "uptimePercent": 100,
-      "samples": 47
+      "samples": 48
     },
     {
       "id": "wikipedia",
@@ -80,11 +80,11 @@
       "url": "https://www.wikipedia.org/",
       "status": "operational",
       "statusCode": 200,
-      "responseTimeMs": 56,
-      "checkedAt": "2026-11-10T07:40:26.667Z",
+      "responseTimeMs": 137,
+      "checkedAt": "2026-11-10T15:48:53.129Z",
       "error": null,
       "uptimePercent": 100,
-      "samples": 47
+      "samples": 48
     },
     {
       "id": "youtube",
@@ -92,11 +92,11 @@
       "url": "https://www.youtube.com/",
       "status": "operational",
       "statusCode": 200,
-      "responseTimeMs": 124,
-      "checkedAt": "2026-11-10T07:40:26.736Z",
+      "responseTimeMs": 256,
+      "checkedAt": "2026-11-10T15:48:53.248Z",
       "error": null,
       "uptimePercent": 100,
-      "samples": 47
+      "samples": 48
     },
     {
       "id": "pauzex",
@@ -104,11 +104,11 @@
       "url": "https://pauzex.devs.surf/",
       "status": "operational",
       "statusCode": 206,
-      "responseTimeMs": 333,
-      "checkedAt": "2026-11-10T07:40:26.946Z",
+      "responseTimeMs": 325,
+      "checkedAt": "2026-11-10T15:48:53.317Z",
       "error": null,
       "uptimePercent": 100,
-      "samples": 46
+      "samples": 47
     },
     {
       "id": "pauze",
@@ -116,11 +116,11 @@
       "url": "https://pauze.is-a.dev/",
       "status": "operational",
       "statusCode": 206,
-      "responseTimeMs": 159,
-      "checkedAt": "2026-11-10T07:40:26.774Z",
+      "responseTimeMs": 308,
+      "checkedAt": "2026-11-10T15:48:53.302Z",
       "error": null,
       "uptimePercent": 100,
-      "samples": 46
+      "samples": 47
     }
   ]
 }
