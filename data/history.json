@@ -499,6 +499,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 84
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.376Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 189
       }
     ],
     "microsoft": [
@@ -999,6 +1005,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 210
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.590Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 362
       }
     ],
     "google": [
@@ -1499,6 +1511,12 @@
         "status": "degraded",
         "statusCode": 429,
         "responseTimeMs": 407
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.362Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 132
       }
     ],
     "github": [
@@ -1999,6 +2017,12 @@
         "status": "operational",
         "statusCode": 206,
         "responseTimeMs": 38
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.368Z",
+        "status": "operational",
+        "statusCode": 206,
+        "responseTimeMs": 139
       }
     ],
     "cloudflare": [
@@ -2499,6 +2523,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 66
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.411Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 181
       }
     ],
     "amazon": [
@@ -2999,6 +3029,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 63
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.377Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 146
       }
     ],
     "wikipedia": [
@@ -3499,6 +3535,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 39
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.391Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 160
       }
     ],
     "youtube": [
@@ -3999,6 +4041,12 @@
         "status": "operational",
         "statusCode": 200,
         "responseTimeMs": 103
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.436Z",
+        "status": "operational",
+        "statusCode": 200,
+        "responseTimeMs": 204
       }
     ],
     "pauzex": [
@@ -4493,6 +4541,12 @@
         "status": "operational",
         "statusCode": 206,
         "responseTimeMs": 178
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.735Z",
+        "status": "operational",
+        "statusCode": 206,
+        "responseTimeMs": 502
       }
     ],
     "pauze": [
@@ -4987,6 +5041,12 @@
         "status": "operational",
         "statusCode": 206,
         "responseTimeMs": 167
+      },
+      {
+        "checkedAt": "2026-11-20T14:25:23.599Z",
+        "status": "operational",
+        "statusCode": 206,
+        "responseTimeMs": 365
       }
     ]
   }
